@@ -3,9 +3,10 @@
 
 ![Java](https://img.shields.io/badge/Java-17_LTS-orange)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.x-brightgreen)
+![BootStrap](https://img.shields.io/badge/BootStrap-5.x-purple)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-blue)
 ![Docker](https://img.shields.io/badge/Docker-ready-blue)
-![Status](https://img.shields.io/badge/status-MVP-success)
+![Status](https://img.shields.io/badge/status-MVP_in_progress-danger)
 
 Plataforma web para la gestión de clubes deportivos no profesionales.  
 Desarrollada como **Producto Mínimo Viable (MVP)** con arquitectura MVC monolítica.
