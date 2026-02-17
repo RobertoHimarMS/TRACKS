@@ -1,0 +1,164 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="789EB6F0-6F06-AA33-087C-295B969E5228" name="Actividad">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>CC52454C-8C6D-6F3B-0D62-CEC11E1A7DB7</importedID>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="idactividad" id="09EFECB3-F259-45AC-2A46-DF07FA429A58">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:04:57 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="titulo" id="D928D884-2DA0-9519-2D42-87DA04B7EE88">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:05:25 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>30</dataTypeSize>
+<ownDataTypeParameters>30,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="descripcion" id="6FDA9E3F-5B34-1E51-87D1-3D2B33A41759">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:05:48 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>90</dataTypeSize>
+<ownDataTypeParameters>90,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="modalidad" id="DDBF6F30-7D76-FB7F-DAA5-6C0F0CD3443B">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:06:14 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>20</dataTypeSize>
+<ownDataTypeParameters>20,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="fecha" id="08D29DCC-15FE-EE8B-554C-36A9998119DE">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:06:57 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="lugar" id="F243E188-DF80-FAAE-8D49-A27F6CC92FE0">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:07:35 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>30</dataTypeSize>
+<ownDataTypeParameters>30,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="distancia" id="EF8ECD8E-7D79-CCC0-8238-8E0DC7654820">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:08:08 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="imagen" id="9BDCAB20-A787-FD17-1976-AE38E97102C5">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:14:24 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50</dataTypeSize>
+<ownDataTypeParameters>50,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="idclub" id="17845E57-099A-60D1-E934-B9F5CF5985B1">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:16:44 UTC</createdTime>
+<generatorID>F53EB7F8-B628-8A09-89BF-CFF79BB59B87</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>49B8761B-6CA2-A345-0608-AB9FBBFBF550</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="8E5A1099-2D1C-757A-BD14-D7B8300F57C2" name="Actividad PK">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:05:20 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>09EFECB3-F259-45AC-2A46-DF07FA429A58</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

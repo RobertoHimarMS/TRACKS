@@ -1,0 +1,126 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="6D5D587E-03E1-ADC1-69C6-254DA0184F17" name="Club">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>CEDD3FDB-494F-9727-C8DC-185F9EB1C22E</importedID>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="idclub" id="49B8761B-6CA2-A345-0608-AB9FBBFBF550">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>F5897903-E63A-F82E-6DD0-A304DA9D07C2</importedID>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="nombre" id="4F231B32-CE96-BA0B-A3D1-1AF55C99AC26">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>D77DADFC-9F1B-C075-D05D-7FC22ECE47ED</importedID>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50</dataTypeSize>
+<ownDataTypeParameters>50,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="gestor" id="08DDF2C0-1895-5C31-AC9D-1A9930D01EEB">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>D93184B5-3800-C52D-165F-DF10B9CE2F4E</importedID>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>12</dataTypeSize>
+<ownDataTypeParameters>12,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="fecha_alta" id="0892E03C-1316-EA87-0440-283DFBBBE027">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>ACDDD983-F524-3F83-44B0-E1C4CFF9AE7B</importedID>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Dirección" id="A13E5BE6-FF02-F19C-D663-50ABC81DBD5F">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>D8FA9366-23A4-A77B-CC28-52DD4448F32B</importedID>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50</dataTypeSize>
+<ownDataTypeParameters>50,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="cp" id="764DF168-2E78-545B-A1DF-5DE91C38EA33">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>605BC9A3-32E1-B174-9543-8D62A38625A3</importedID>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="C4CE5784-7138-AABC-F97A-1C9FBB1F8FF3" name="Usuario PK">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>9EC471AD-FEC6-B4B3-9247-3C671F305B66</importedID>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>49B8761B-6CA2-A345-0608-AB9FBBFBF550</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

@@ -1,0 +1,38 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="Pertenece a" directorySegmentName="seg_0" id="2BDC2BCD-1FF9-4EDA-B9F5-590F97D1A5B9">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>D9CFB42C-B585-5758-08F7-71869C2EE8D7</importedID>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<sourcePk>91764653-0DC6-F4D0-6B13-E9651FED1DE5</sourcePk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>*</sourceCardinality>
+<sourceEntity>88FB21C0-2292-4DD1-E037-23EBC63BDED2</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>6D5D587E-03E1-ADC1-69C6-254DA0184F17</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<attribute name="rol" id="A2DAE9FD-43D1-C817-DA56-F5CBA4D0E9A3">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>615F2A6E-DB87-C998-29B9-288B8DA6BDD1</importedID>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</attribute>
+</attributes>
+</Relation>

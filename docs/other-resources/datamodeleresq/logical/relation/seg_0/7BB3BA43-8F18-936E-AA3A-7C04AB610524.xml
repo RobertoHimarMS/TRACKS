@@ -1,0 +1,49 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="compra" directorySegmentName="seg_0" id="7BB3BA43-8F18-936E-AA3A-7C04AB610524">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:25:15 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<targetPk>DFEAE698-A1B4-C09B-95B0-19F79C20F504</targetPk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>true</optionalTarget>
+<sourceCardinality>*</sourceCardinality>
+<sourceEntity>88FB21C0-2292-4DD1-E037-23EBC63BDED2</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>651ACAA4-CA93-6C4A-3390-B8789A2C0E51</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<attribute name="cantidad" id="104E7987-543B-1149-A25B-B66488B5FA0C">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:32:54 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</attribute>
+<attribute name="estado" id="F9FCB7C3-D2C2-3E9A-E966-FFBC419F893C">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:33:15 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>20</dataTypeSize>
+<ownDataTypeParameters>20,,</ownDataTypeParameters>
+</attribute>
+</attributes>
+</Relation>

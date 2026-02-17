@@ -1,0 +1,124 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="95FDDAE0-2D10-AF01-C1A2-33B7EFC4CCFA" name="Ticket">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>D35B7CA1-4869-0FD9-6DF5-ECCAC7BF608C</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="idticket" id="50D33DC7-11BA-831B-ACB6-E990402BD211">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>31A9E7DB-43C3-7C8B-B64D-61512A524919</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="asunto" id="26C89BE3-FA2A-6556-AB4E-45365ED626CB">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>E5C7CA85-9D03-F20C-3FCE-7B66B59B80D2</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>30</dataTypeSize>
+<ownDataTypeParameters>30,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="descripcion" id="2C102953-FCB4-7AC5-2F74-D315AE22FBDA">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>DC600249-62A9-365E-69E7-B2144F4B3F34</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>80</dataTypeSize>
+<ownDataTypeParameters>80,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="prioridad" id="64C36391-AB2D-E4E2-1404-22D7E0265331">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>05D311FF-0A85-43CC-4A1D-CA735A13A18E</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="estado" id="AE53A671-7565-B0A1-7B6F-B0D0FD0D07DA">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>8E7FD48E-B7D5-9627-03DC-64E2B4049657</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>15</dataTypeSize>
+<ownDataTypeParameters>15,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="idticket1" id="79302A95-1BDD-23E1-EC25-343307A8CCBE">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>96A64765-C6ED-55B2-584F-6EE460C647D9</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Usuario_dni" id="BA2522CC-1A60-7924-AC87-4C728672CFB6">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>427DCEEA-2B50-551D-8817-15C8AB0F27C3</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>12</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="99F26B04-78E2-7C4B-C1E9-A9C7766C5811" referredColumn="3143184F-0AE7-9639-6E4F-2E33CFAF77D1"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="584D4A01-AA78-90E7-1137-4A0D396A375F" name="Ticket_PK">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>7F5A29F7-E933-1F66-7FC1-31B9760CB37A</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="50D33DC7-11BA-831B-ACB6-E990402BD211"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="90E1BFB8-0804-B508-5F92-D07EC2AF6C47" name="Ticket_Usuario_FK">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>CDE302E1-862A-D420-50F6-8DB69A4DECFF</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="BA2522CC-1A60-7924-AC87-4C728672CFB6"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

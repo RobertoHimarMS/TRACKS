@@ -1,0 +1,89 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="385CD939-0A0B-E0EF-F2D4-58EA4FF240CF" name="Pertenece_a">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="Usuario_dni" id="D372D20B-D5B5-8FF9-8CAE-B1D9F23B7610">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>12</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="E240F053-ED2B-E23F-8C39-4069660C326F" referredColumn="3143184F-0AE7-9639-6E4F-2E33CFAF77D1"/>
+</associations>
+</Column>
+<Column name="Club_idclub" id="B1C74C9E-D217-23B0-61EA-F876D48D1B51">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="DE17AC10-219B-740E-5380-DAAE689F5541" referredColumn="59F95B8B-6458-AC84-7C02-D272D465E956"/>
+</associations>
+</Column>
+<Column name="rol" id="7C33A91D-F4D8-4560-03B0-0220282A9568">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>A2DAE9FD-43D1-C817-DA56-F5CBA4D0E9A3</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<isRelationshipColumn>true</isRelationshipColumn>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="279F4678-6841-0DA7-E463-A380EF244D44" name="Pertenece_a_PK">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="D372D20B-D5B5-8FF9-8CAE-B1D9F23B7610"/>
+<colUsage columnID="B1C74C9E-D217-23B0-61EA-F876D48D1B51"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="9330F034-C6C6-7CA4-ADFC-C203045EF733" name="Pertenece_a_Usuario_FK">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>2BDC2BCD-1FF9-4EDA-B9F5-590F97D1A5B9</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="D372D20B-D5B5-8FF9-8CAE-B1D9F23B7610"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="9421439B-D880-6993-C8CE-9CE840865151" name="Pertenece_a_Club_FK">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>2BDC2BCD-1FF9-4EDA-B9F5-590F97D1A5B9</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="B1C74C9E-D217-23B0-61EA-F876D48D1B51"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

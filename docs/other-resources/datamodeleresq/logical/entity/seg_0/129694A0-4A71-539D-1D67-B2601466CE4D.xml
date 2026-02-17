@@ -1,0 +1,156 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="129694A0-4A71-539D-1D67-B2601466CE4D" name="Peticion">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>8375D99D-F808-1D1B-5B58-4974CB8962B6</importedID>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="idpeticion" id="1F215860-0769-29E3-138F-3E5C02D426C3">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>D1F08D68-7206-0E49-9AF0-67176CFEB12E</importedID>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="tipo" id="F40DA6F3-726F-CBB3-0DF1-EC11591E67DE">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>5325D28B-4CB3-5A73-0AC3-572C61FCA750</importedID>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>10</dataTypeSize>
+<ownDataTypeParameters>10,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="peticionario" id="AFE8819A-21C7-F519-201A-20BD0086DFBB">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>99B8C5E2-7577-A7BF-A4EE-5DE9AB9C6456</importedID>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>12</dataTypeSize>
+<ownDataTypeParameters>12,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="club_destino" id="7E3FA2B0-4F2F-3152-0BD7-72F200743DBE">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>D059D0B9-3F18-7804-2506-D880F2EDD0F2</importedID>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="estado" id="59162DD8-9B97-AE1F-30B5-179ADE76F899">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>5135BE39-4789-DDC4-B26E-F9DD4775779E</importedID>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>15</dataTypeSize>
+<ownDataTypeParameters>15,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="fecha_peticion" id="252A1C84-61A1-5274-857A-F9046D5A5C32">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>46ACCD67-EF0B-5570-AEA5-1F9361CAA1EE</importedID>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="fecha_resolucion" id="18ED3DB5-271C-C6B8-D778-6FE5E28D43AD">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>DC39D053-8779-B91F-D9ED-57CB40924B07</importedID>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="dni" id="9E7B81FC-E8E0-9083-998D-E71497A157BC">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<generatorID>B9845F17-BF9A-36E8-E662-573A0454254E</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>7F1A9198-CBAA-581D-FEE6-AFBEF081240B</importedID>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>B0AB1C8F-CFB0-0C99-0434-DAFB02023C86</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>12</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="BC1667CA-E163-1DCA-0923-85BEDCE09BB4" name="Usuario PK">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>4A92F6DE-AF27-C3C4-3E41-05C3A3C77AF8</importedID>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>1F215860-0769-29E3-138F-3E5C02D426C3</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="F0C097D7-849F-77E8-FDDD-9A1FE5B5E5FE" containerWithKeyObject="C566C9D6-E80C-95FC-A7C5-B8CD8B60AFDE" localFKIndex="E436863A-A357-5B80-9A45-DE5E4EC52130" name="Pertenece_a_Usuario_FK">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<generatorID>2BDC2BCD-1FF9-4EDA-B9F5-590F97D1A5B9</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>01631E1D-345E-78B1-FDDF-24D0DBED0CC6</importedID>
+<referredTableLongName>Usuario</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>32506892-5FF7-B474-F545-8DB3BA2470F7</referredTableID>
+<keyObject>F485B6B5-CF00-4534-1B69-888A5B4339B1</keyObject>
+<referredKeyID>F485B6B5-CF00-4534-1B69-888A5B4339B1</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>dni</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

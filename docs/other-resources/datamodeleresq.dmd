@@ -1,0 +1,13 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="datamodeleresq" id="9EE4A88F-0241-8D94-2DAB-0A23C64C39A7" version="3.5">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:27:45 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>9EE4A88F-0241-8D94-2DAB-0A23C64C39A7</designId>
+<usedDesignStorageDescriptors>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="303982AC-2575-EDF5-7571-EC5D9C805C71">
+<designStoragePath>C:\Users\rober\Desktop\3ºDAW\Proyecto de Desarrollo de App Web (PRW)\Proyecto TRACKS\datamodeleresq</designStoragePath>
+</designDescr>
+</usedDesignStorageDescriptors>
+</OSDM_Design>

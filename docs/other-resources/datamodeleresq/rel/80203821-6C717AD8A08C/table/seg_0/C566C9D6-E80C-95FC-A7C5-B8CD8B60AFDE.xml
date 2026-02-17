@@ -1,0 +1,91 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="C566C9D6-E80C-95FC-A7C5-B8CD8B60AFDE" name="Pertenece_a">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>8F8F297C-5FA7-B241-6E8E-2195ACCA203C</importedID>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="Usuario_dni" id="E2040F0A-0708-B06B-E7D1-A2CB6AA71ABD">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>84E03323-F6D4-61E2-49DC-DFDE8ABD7B69</importedID>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>12</dataTypeSize>
+<ownDataTypeParameters>12,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="F0C097D7-849F-77E8-FDDD-9A1FE5B5E5FE" referredColumn="58EFC2FA-5B0E-8768-B264-CBD5BB16528E"/>
+</associations>
+</Column>
+<Column name="Club_idclub" id="5C493020-225D-5B04-AC67-9B3FBD591DDD">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>EE7BCD36-73CF-353A-E0FC-BB032DBD453E</importedID>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="8CF210C9-7435-A896-509E-D291B4150AF1" referredColumn="B0FFB93D-B5D4-ADA8-34FB-15CBCD1C3380"/>
+</associations>
+</Column>
+<Column name="rol" id="A1B08EE2-C7DE-40AB-B4F4-A6FCC0879B63">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<generatorID>A2DAE9FD-43D1-C817-DA56-F5CBA4D0E9A3</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>D1BFDE95-8A23-ED0A-C507-BDE8CAA363F4</importedID>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="2C48DA03-2ECD-A05A-4DF0-E4689D9F58FB" name="Pertenece_a_PK">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>B73A0201-227B-305F-FA26-83B6B568515B</importedID>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="E2040F0A-0708-B06B-E7D1-A2CB6AA71ABD"/>
+<colUsage columnID="5C493020-225D-5B04-AC67-9B3FBD591DDD"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="E436863A-A357-5B80-9A45-DE5E4EC52130" name="Pertenece_a_Usuario_FK">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<generatorID>2BDC2BCD-1FF9-4EDA-B9F5-590F97D1A5B9</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="E2040F0A-0708-B06B-E7D1-A2CB6AA71ABD"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="D221E5F7-242F-ED39-98A2-B5C8BF8601D7" name="Pertenece_a_Club_FK">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<generatorID>2BDC2BCD-1FF9-4EDA-B9F5-590F97D1A5B9</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="5C493020-225D-5B04-AC67-9B3FBD591DDD"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

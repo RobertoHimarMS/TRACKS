@@ -1,0 +1,134 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="132ABA86-04C1-4AAC-2389-E6C379538BF2" name="Peticion">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>129694A0-4A71-539D-1D67-B2601466CE4D</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="idpeticion" id="DD160BBA-8567-6A4D-C1EF-F6598CD44A9A">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>1F215860-0769-29E3-138F-3E5C02D426C3</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="tipo" id="C78C9ED4-9544-E007-C9D4-7BA632F0E36E">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>F40DA6F3-726F-CBB3-0DF1-EC11591E67DE</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>10</dataTypeSize>
+<ownDataTypeParameters>10,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="peticionario" id="9C0DED87-5322-83FC-2A0E-B05C1FF8226C">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>AFE8819A-21C7-F519-201A-20BD0086DFBB</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>12</dataTypeSize>
+<ownDataTypeParameters>12,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="club_destino" id="8ED8E771-FC9D-E434-1624-0286905ECC18">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>7E3FA2B0-4F2F-3152-0BD7-72F200743DBE</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="estado" id="1C787EBA-F352-25CA-6ECC-0CD1E5DE85D2">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>59162DD8-9B97-AE1F-30B5-179ADE76F899</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>15</dataTypeSize>
+<ownDataTypeParameters>15,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="fecha_peticion" id="E63491F5-10B2-26AA-5ACA-2D9B9B5B21DD">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>252A1C84-61A1-5274-857A-F9046D5A5C32</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="fecha_resolucion" id="DD67CDBF-BFC9-C1F1-58E4-E2569B0A15AB">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>18ED3DB5-271C-C6B8-D778-6FE5E28D43AD</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Usuario_dni" id="663CA1AF-669E-7F31-A743-383012F5A39C">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>9E7B81FC-E8E0-9083-998D-E71497A157BC</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>12</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="3D4ECD72-8830-5C63-47B2-1E42E24F8A14" referredColumn="3143184F-0AE7-9639-6E4F-2E33CFAF77D1"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="83049035-85B8-824A-91C0-271BDC480701" name="Peticion_PK">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>BC1667CA-E163-1DCA-0923-85BEDCE09BB4</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="DD160BBA-8567-6A4D-C1EF-F6598CD44A9A"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="924E8A55-4179-2410-7A22-01D6AAA4C4D8" name="Peticion_Usuario_FK">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>B9845F17-BF9A-36E8-E662-573A0454254E</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="663CA1AF-669E-7F31-A743-383012F5A39C"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

@@ -1,0 +1,101 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="D556F9C2-83D6-BC60-28E8-D746C910EBE4" name="Publicacion">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>7CB39BE8-5A68-36FF-634C-845F484AB933</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="idpublicacion" id="B701A4CC-A03A-B77B-6515-DE1A7E0FA49E">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>967CB1A8-38CA-66C6-D248-76CE33B23E2F</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="titulo" id="9013F0F8-DE99-37A3-B087-037A8A3C410C">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>41BB7D01-D8ED-1A81-58F3-BC35A84F5767</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>40</dataTypeSize>
+<ownDataTypeParameters>40,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="texto" id="289FAA6C-ED78-9E4B-1BA9-94F30EC2B679">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>C4888A86-3E5A-E366-DD51-20990A2CD83E</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100</dataTypeSize>
+<ownDataTypeParameters>100,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="imagen" id="EBAB3F71-9AF9-A641-3ACF-533FE0DBA279">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>C87EC82B-B8CC-B6AE-E3EB-911F159BA54C</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>60</dataTypeSize>
+<ownDataTypeParameters>60,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Club_idclub" id="16818803-3D1A-62DE-4C52-39874F6C3662">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>70B5C1B9-A135-31A6-8DDD-76F7A3A1785F</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="7973E3CE-1BA8-190E-0F58-720278B2623E" referredColumn="59F95B8B-6458-AC84-7C02-D272D465E956"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="54040AAF-9438-8581-2E72-6601E951676E" name="Publicacion_PK">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>EB89345F-9E9F-9A08-0384-261DDC54F51C</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="B701A4CC-A03A-B77B-6515-DE1A7E0FA49E"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="ACD97B39-ADAD-0F72-17C0-C0B14CD2855D" name="Publicacion_Club_FK">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>9BD13E39-DD92-4B33-2F9F-857D5B82B5FD</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="16818803-3D1A-62DE-4C52-39874F6C3662"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

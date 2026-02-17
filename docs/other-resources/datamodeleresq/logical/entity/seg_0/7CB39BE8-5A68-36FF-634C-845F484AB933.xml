@@ -1,0 +1,108 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="7CB39BE8-5A68-36FF-634C-845F484AB933" name="Publicacion">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>C37DF64D-2FD9-9B59-1C14-4FCCF6D3F922</importedID>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="idpublicacion" id="967CB1A8-38CA-66C6-D248-76CE33B23E2F">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:10:00 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="titulo" id="41BB7D01-D8ED-1A81-58F3-BC35A84F5767">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:10:29 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>40</dataTypeSize>
+<ownDataTypeParameters>40,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="texto" id="C4888A86-3E5A-E366-DD51-20990A2CD83E">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:10:47 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100</dataTypeSize>
+<ownDataTypeParameters>100,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="imagen" id="C87EC82B-B8CC-B6AE-E3EB-911F159BA54C">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:11:03 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>60</dataTypeSize>
+<ownDataTypeParameters>60,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="idclub" id="70B5C1B9-A135-31A6-8DDD-76F7A3A1785F">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:20:15 UTC</createdTime>
+<generatorID>9BD13E39-DD92-4B33-2F9F-857D5B82B5FD</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>49B8761B-6CA2-A345-0608-AB9FBBFBF550</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="EB89345F-9E9F-9A08-0384-261DDC54F51C" name="Publicacion PK">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:10:25 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>967CB1A8-38CA-66C6-D248-76CE33B23E2F</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

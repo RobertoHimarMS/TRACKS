@@ -1,0 +1,20 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="vende" directorySegmentName="seg_0" id="C71E115D-1364-7D11-4B0D-9BF2D40DB15A">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:22:15 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<sourcePk>C4CE5784-7138-AABC-F97A-1C9FBB1F8FF3</sourcePk>
+<identifying>false</identifying>
+<optionalSource>false</optionalSource>
+<optionalTarget>true</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>6D5D587E-03E1-ADC1-69C6-254DA0184F17</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>651ACAA4-CA93-6C4A-3390-B8789A2C0E51</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

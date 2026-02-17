@@ -1,0 +1,20 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="solicita" directorySegmentName="seg_0" id="CDE302E1-862A-D420-50F6-8DB69A4DECFF">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:57:38 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<engineerTo>
+<item key="B3A63DC9-7464-7044-A60A-000BC7983C79" value="true"/>
+<item key="80203821-620B-3B89-5D91-6C717AD8A08C" value="true"/>
+</engineerTo>
+<sourcePk>91764653-0DC6-F4D0-6B13-E9651FED1DE5</sourcePk>
+<identifying>false</identifying>
+<optionalSource>false</optionalSource>
+<optionalTarget>true</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>88FB21C0-2292-4DD1-E037-23EBC63BDED2</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>D35B7CA1-4869-0FD9-6DF5-ECCAC7BF608C</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

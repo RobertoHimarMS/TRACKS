@@ -1,0 +1,142 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="6209BE7A-275A-B833-0629-518A17EC9DAC" name="Petición">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<generatorID>129694A0-4A71-539D-1D67-B2601466CE4D</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>D3C2691F-3D51-0E78-AE69-EBFA01304FA7</importedID>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="idpeticion" id="32413F23-FDC8-C937-86C6-B04FAE718B67">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<generatorID>1F215860-0769-29E3-138F-3E5C02D426C3</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>212C7EB6-68F8-F1AC-3326-DB61722E31F8</importedID>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="tipo" id="02CFF973-988A-4170-E771-9FF99B8F6354">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<generatorID>F40DA6F3-726F-CBB3-0DF1-EC11591E67DE</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>9CCBAB27-556F-6396-2E23-7797659E6969</importedID>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>10</dataTypeSize>
+<ownDataTypeParameters>10,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="peticionario" id="DA313688-8AC1-3E79-8EC5-2B5FAE3E8896">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<generatorID>AFE8819A-21C7-F519-201A-20BD0086DFBB</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>41A41FD0-F7D3-7446-BF91-1FE1D62451D3</importedID>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>12</dataTypeSize>
+<ownDataTypeParameters>12,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="id_club" id="BB822C0B-6EC9-16A4-2683-680DA4310167">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<generatorID>7E3FA2B0-4F2F-3152-0BD7-72F200743DBE</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>8F88CAB8-4355-7F44-30CE-E63957404BC9</importedID>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="fecha_peticion" id="1F2B536F-B823-E940-8A88-D5A80FD53D0A">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<generatorID>252A1C84-61A1-5274-857A-F9046D5A5C32</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>705F8CE8-5E9E-9339-4C27-B73F0F92D888</importedID>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="fecha_resolucion" id="6C0C415E-D11D-22CA-D3D1-AA86CA10BBC0">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<generatorID>18ED3DB5-271C-C6B8-D778-6FE5E28D43AD</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>F13DDBCB-062E-BFCD-E34C-EF4A0782D758</importedID>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="estado" id="9251C939-B397-B241-C442-E4026B57A5BE">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<generatorID>59162DD8-9B97-AE1F-30B5-179ADE76F899</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>D17026F3-A34D-E738-3EEC-54BC51E1DC2B</importedID>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>15</dataTypeSize>
+<ownDataTypeParameters>15,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Usuario_dni" id="13750482-316E-B11C-F301-F7D6216EB949">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<generatorID>9E7B81FC-E8E0-9083-998D-E71497A157BC</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>E4096112-C507-EF42-02C7-57219049CC61</importedID>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>12</dataTypeSize>
+<ownDataTypeParameters>12,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="80406654-6F56-CDC8-A9AC-B730CFE54000" referredColumn="58EFC2FA-5B0E-8768-B264-CBD5BB16528E"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="C5883C09-99CD-77DB-5A01-47FADDEFD843" name="Petición_PK">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<generatorID>BC1667CA-E163-1DCA-0923-85BEDCE09BB4</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<importedID>E8B80FB4-B67C-F57A-90B6-38C6E6C33F90</importedID>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="32413F23-FDC8-C937-86C6-B04FAE718B67"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="7419E4CF-43E0-AA11-5314-51A418A1B381" name="Petición_Usuario_FK">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 21:37:25 UTC</createdTime>
+<generatorID>B9845F17-BF9A-36E8-E662-573A0454254E</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="13750482-316E-B11C-F301-F7D6216EB949"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

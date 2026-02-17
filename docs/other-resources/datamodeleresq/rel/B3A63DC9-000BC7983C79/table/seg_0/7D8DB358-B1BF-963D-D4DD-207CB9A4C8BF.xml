@@ -1,0 +1,113 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="7D8DB358-B1BF-963D-D4DD-207CB9A4C8BF" name="Producto">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>651ACAA4-CA93-6C4A-3390-B8789A2C0E51</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="idproducto" id="7F9E43BE-5294-88CE-369D-5C26A8589C7D">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>4FEB0442-92F5-9021-475D-FB42D08C529C</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="nombre" id="782F30C4-F0A2-B40D-E33F-792F06D25728">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>E29DF14D-2FA5-C445-93EB-55FAB000065E</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>40</dataTypeSize>
+<ownDataTypeParameters>40,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="descripcion" id="D819FAF9-BC22-A86D-BA76-97EB51A3A64F">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>A82AAF61-23CA-B51E-56DC-1F26C1BAAFC8</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>60</dataTypeSize>
+<ownDataTypeParameters>60,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="imagen" id="C6D306A5-4413-2B94-9608-50E9EA556BA7">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>C223F2C3-861D-5E28-143C-A1BD2F8C4FB5</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50</dataTypeSize>
+<ownDataTypeParameters>50,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="precio" id="2736E542-49C1-4C03-CA0D-D890B0FBF84F">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>9CD64D2B-6C5C-627B-0D1D-6A7D8167BDD5</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT021</logicalDatatype>
+<dataTypePrecision>2</dataTypePrecision>
+<ownDataTypeParameters>,2,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Club_idclub" id="48961580-77BC-C94D-DC9F-E97D9501CF19">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>8D7D5788-B781-E128-10C3-06B7255D8D3D</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="B3F9F724-7993-C524-2EA5-FA7C368A9D0B" referredColumn="59F95B8B-6458-AC84-7C02-D272D465E956"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="C822D10D-DD38-920A-C0A4-13F6291663E2" name="Producto_PK">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>DFEAE698-A1B4-C09B-95B0-19F79C20F504</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="7F9E43BE-5294-88CE-369D-5C26A8589C7D"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="29B156DE-3FB8-B4EC-B782-861BF534E577" name="Producto_Club_FK">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>C71E115D-1364-7D11-4B0D-9BF2D40DB15A</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="48961580-77BC-C94D-DC9F-E97D9501CF19"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

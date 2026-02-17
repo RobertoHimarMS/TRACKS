@@ -1,0 +1,103 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="9050BDE3-6689-F967-A187-F1375B5933C2" name="compra">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="Usuario_dni" id="A47F1979-9E64-9A58-00D8-CBFD931A8F78">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>12</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="39191635-400F-473C-A290-1F85EA328B5A" referredColumn="3143184F-0AE7-9639-6E4F-2E33CFAF77D1"/>
+</associations>
+</Column>
+<Column name="Producto_idproducto" id="14BC3358-7B85-CC1A-CF70-3C8F9947E25F">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="20333772-FDE7-0E8E-C82B-CC521A09A651" referredColumn="7F9E43BE-5294-88CE-369D-5C26A8589C7D"/>
+</associations>
+</Column>
+<Column name="cantidad" id="04F79DBB-94A4-7A2F-250A-23BA14B5B5F4">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:34:00 UTC</createdTime>
+<generatorID>104E7987-543B-1149-A25B-B66488B5FA0C</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<isRelationshipColumn>true</isRelationshipColumn>
+<isDependOnFK_AsMandatory>true</isDependOnFK_AsMandatory>
+</Column>
+<Column name="estado" id="6A1B9BBA-8F2A-8380-7E8F-8B72861D2FCE">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:34:00 UTC</createdTime>
+<generatorID>F9FCB7C3-D2C2-3E9A-E966-FFBC419F893C</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>20</dataTypeSize>
+<ownDataTypeParameters>20,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<isRelationshipColumn>true</isRelationshipColumn>
+<isDependOnFK_AsMandatory>true</isDependOnFK_AsMandatory>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="4422AEA9-94E5-1E38-2C2E-32B3FF83AFAD" name="compra_PK">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="A47F1979-9E64-9A58-00D8-CBFD931A8F78"/>
+<colUsage columnID="14BC3358-7B85-CC1A-CF70-3C8F9947E25F"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="3F3AF023-958D-77A9-D526-CAD97D78A733" name="compra_Usuario_FK">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>7BB3BA43-8F18-936E-AA3A-7C04AB610524</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="A47F1979-9E64-9A58-00D8-CBFD931A8F78"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="57819942-FBCF-DA56-FCBC-FDB64EB49394" name="compra_Producto_FK">
+<createdBy>rober</createdBy>
+<createdTime>2026-02-14 22:27:10 UTC</createdTime>
+<generatorID>7BB3BA43-8F18-936E-AA3A-7C04AB610524</generatorID>
+<ownerDesignName>datamodeleresq</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="14BC3358-7B85-CC1A-CF70-3C8F9947E25F"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>
