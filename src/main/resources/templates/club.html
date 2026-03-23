@@ -1,191 +1,532 @@
-<!doctype html>
-<html lang="es">
+<!-----------------------------------------------------------
+    PÁGINA DE DETALLE DE CLUB
+    TrackYours Sports - Actividades, publicaciones y tienda
+------------------------------------------------------------>
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="https://www.thymeleaf.org">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TrackYours • Mi Club</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-                integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-                crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="/assets/css/styles.css" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${club.name}">TrackYours • Club</title>
+
+    <!-- CSS y iconos externos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+                            integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+                            crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+                            integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/mystyles.css?v=1.3}">
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg sticky-top">
-    <div class="container">
-      <a class="navbar-brand d-flex align-items-center gap-2 fw-semibold" href="/">
-        <span class="brand-mark"><i class="fa-solid fa-person-running"></i></span>
-        <span>TrackYours</span>
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"><span class="navbar-toggler-icon"></span></button>
-      <div class="collapse navbar-collapse" id="mainNav">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-lg-1">
-          <li class="nav-item"><a class="nav-link" href="/"><i class="fa-solid fa-house me-1"></i> Inicio</a></li>
-          <li class="nav-item"><a class="nav-link active" href="/club"><i class="fa-solid fa-users me-1"></i> Mi Club</a></li>
-          <li class="nav-item"><a class="nav-link" href="/carne"><i class="fa-solid fa-id-card me-1"></i> Mi Carné</a></li>
-          <li class="nav-item"><a class="nav-link" href="#tienda"><i class="fa-solid fa-store me-1"></i> Tienda</a></li>
-          <li class="nav-item"><a class="nav-link" href="/#contacto"><i class="fa-solid fa-envelope me-1"></i> Contacto</a></li>
-        </ul>
-        <div class="d-flex gap-2">
-          <button class="btn btn-accent btn-sm px-3" data-bs-toggle="modal" data-bs-target="#authModal"><i class="fa-solid fa-right-to-bracket me-1"></i> Log In</button>
-        </div>
-      </div>
-    </div>
-  </nav>
 
-  <main class="py-4 py-lg-5">
-    <div class="container">
-      <!-- Club Header -->
-      <div class="feature-card p-4 mb-4">
-        <div class="d-flex flex-column flex-md-row gap-3 align-items-md-center justify-content-between">
-          <div class="d-flex gap-3 align-items-center">
-            <img src="/assets/img/club-placeholder.jpg" class="rounded-4" alt="Club" style="width:110px;height:80px;object-fit:cover;">
-            <div>
-              <h1 class="h3 mb-1"><i class="fa-solid fa-users me-2"></i>Club BB</h1>
-              <p class="text-body-secondary mb-0">Descripción breve del club…</p>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2 p-2" href="home.html">
+                <span class="brand-mark">
+                    <svg class="logo-icon">
+                        <use th:href="@{/icons/logo-for-use.svg#logo-icon}"></use>
+                    </svg>
+                </span>
+                <span>TrackYours</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-lg-1">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/}"><i class="fa-solid fa-house me-1"></i> Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link active" th:href="${session.userlogged == null} ? @{/} : (${session.rollogged == 'admin'} ? @{/admin} : @{/club/{id}(id=${session.clublogged.idclub})})"><i class="fa-solid fa-users me-1"></i> Mi Club</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/carne}"><i class="fa-solid fa-id-card me-1"></i> Mi Carné</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/club#tienda}"><i class="fa-solid fa-store me-1"></i> Tienda</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/home#contacto}"><i class="fa-solid fa-envelope me-1"></i> Contacto</a></li>
+                </ul>
+                <!-- No logueado: mostrar botón Iniciar sesión -->
+                <div class="d-flex gap-2" th:if="${session.userlogged == null}">
+                    <button class="btn btn-accent btn-sm px-3" data-bs-toggle="modal" data-bs-target="#authModal">
+                        <i class="fa-solid fa-right-to-bracket me-1"></i> Iniciar sesión
+                    </button>
+                </div>
+                <!-- Logueado: mostrar info usuario y botón Cerrar sesión -->
+                <div class="d-flex align-items-center gap-3" th:if="${session.userlogged != null}">
+                    <div class="text-end small">
+                        <div class="fw-semibold" th:text="${session.userlogged.name + ' ' + session.userlogged.surname}">Nombre Apellido</div>
+                        <div class="text-muted">
+                            <span th:text="${session.clublogged.name}">Club</span>
+                            <span class="text-capitalize" th:text="'(' + ${session.rollogged} + ')'">(rol)</span>
+                        </div>
+                    </div>
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="btn btn-accent btn-sm px-3">
+                            <i class="fa-solid fa-right-from-bracket me-1"></i> Cerrar sesión
+                        </button>
+                    </form>
+                </div>
             </div>
-          </div>
-          <div class="d-flex flex-wrap gap-2">
-            <a class="btn btn-outline-accent" href="/club/socio/nuevo"><i class="fa-solid fa-user-plus me-2"></i>Hazte socio</a>
-            <a class="btn btn-outline-warning" href="/item/editar"><i class="fa-solid fa-pen me-2"></i>Editar</a>
-          </div>
         </div>
-      </div>
+    </nav>
 
-      <!-- Activities -->
-      <div class="feature-card p-4 mb-4">
-        <div class="d-flex align-items-center justify-content-between mb-3">
-          <h2 class="h4 mb-0"><i class="fa-solid fa-person-running me-2"></i>Actividades</h2>
-          <a class="btn btn-outline-accent" href="/item/editar"><i class="fa-solid fa-plus me-2"></i>Nuevo</a>
+    <!-- Mensaje de éxito/error -->
+    <div class="container mt-3" th:if="${param.mensaje != null}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${param.mensaje[0] == 'ok'}">
+            <i class="fa-solid fa-circle-check me-2"></i> ¡Solicitud enviada correctamente! Te contactaremos pronto.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
         </div>
-        <div class="row g-4">
-          <div class="col-12 col-sm-6 col-lg-3">
-            <div class="card club-card h-100">
-              <img src="/assets/img/club-placeholder.jpg" class="card-img-top" alt="Actividad">
-              <div class="card-body">
-                <h3 class="h6 card-title mb-1"><i class="fa-solid fa-person-running me-1"></i> Ruta costa</h3>
-                <p class="card-text text-body-secondary small mb-0">Dom 10:00 • 8 km</p>
-              </div>
-              <div class="card-footer d-flex gap-2 justify-content-end">
-                <button class="btn btn-outline-accent icon-btn" data-bs-toggle="modal" data-bs-target="#detailModal"
-                  data-item-type="actividad" data-item-title="Ruta costa" data-item-desc="Salida grupal. Ritmo suave."
-                  data-item-meta1="Fecha: Domingo 10:00" data-item-meta2="Distancia: 8 km"><i class="fa-solid fa-eye"></i></button>
-                <button class="btn btn-outline-success icon-btn"><i class="fa-solid fa-circle-check"></i></button>
-                <a class="btn btn-outline-warning icon-btn" href="/item/editar"><i class="fa-solid fa-pen"></i></a>
-                <button class="btn btn-outline-danger icon-btn"><i class="fa-solid fa-trash"></i></button>
-              </div>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${param.mensaje[0] == 'ko'}">
+            <i class="fa-solid fa-circle-exclamation me-2"></i> Error al enviar la solicitud. Por favor, inténtalo de nuevo.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    </div>
+
+    <!-- HERO - Cabecera del club -->
+    <header class="hero py-5">
+        <div class="container">
+            <div class="row align-items-center g-4 g-lg-5">
+                <div class="col-lg-5">
+                    <div class="hero-media">
+                        <img th:src="@{/imgs/clubs/{photo}(photo=${club.photo})}" class="rounded-4" alt="Club">
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <h1 class="display-6 fw-bold mb-1">
+                        <i class="fa-solid me-2" th:classappend="${club.sportIcon}"></i>
+                        <span th:text="${club.name}">Nombre del Club</span>
+                    </h1>
+                    <p class="lead mb-3" th:text="${club.description}">Descripción del club...</p>
+                    <p class="text-muted mb-4">
+                        <i class="fa-solid fa-location-dot me-1"></i>
+                        <span th:text="${club.sportName}">Deporte</span>
+                        <span class="mx-2">•</span>
+                        <i class="fa-solid fa-city me-1"></i>
+                        <span th:text="${club.city}">Ciudad</span>
+                    </p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <!-- Botón Hazte socio: visible si NO es socio del club y NO es admin -->
+                        <a class="btn btn-join" th:href="@{/club/newuser/{idclub}(idclub=${club.idclub})}"
+                           th:if="${!yaEsSocio and (session.userlogged == null or session.rollogged != 'admin')}">
+                            <i class="fa-solid fa-user-plus me-2"></i> Hazte socio
+                        </a>
+                        <!-- Botón Gestionar Socios: visible solo si manager logueado en este club -->
+                        <a class="btn btn-manage" th:href="@{/club/admin/{id}(id=${session.clublogged.idclub})}"
+                           th:if="${session.clublogged != null and session.clublogged.idclub == club.idclub and session.rollogged == 'manager'}">
+                            <i class="fa-solid fa-users-gear me-2"></i> Gestionar Socios
+                        </a>
+                        <!-- Botón Darse de baja: visible si ya es socio de este club -->
+                        <a class="btn btn-leave" href="#"
+                           th:if="${yaEsSocio}">
+                            <i class="fa-solid fa-xmark me-2"></i> Darse de baja
+                        </a>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
+    </header>
 
-      <!-- Publications -->
-      <div class="feature-card p-4 mb-4">
-        <div class="d-flex align-items-center justify-content-between mb-3">
-          <h2 class="h4 mb-0"><i class="fa-solid fa-clipboard-list me-2"></i>Publicaciones</h2>
-          <a class="btn btn-outline-accent" href="/item/editar"><i class="fa-solid fa-plus me-2"></i>Nuevo</a>
-        </div>
-        <div class="row g-4">
-          <div class="col-12 col-sm-6 col-lg-3">
-            <div class="card club-card h-100">
-              <img src="/assets/img/club-placeholder.jpg" class="card-img-top" alt="Publicación">
-              <div class="card-body">
-                <h3 class="h6 card-title mb-1"><i class="fa-solid fa-newspaper me-1"></i> Quedada sábado</h3>
-                <p class="card-text text-body-secondary small mb-0">Salida 09:00…</p>
-              </div>
-              <div class="card-footer d-flex gap-2 justify-content-end">
-                <button class="btn btn-outline-accent icon-btn" data-bs-toggle="modal" data-bs-target="#detailModal"
-                  data-item-type="publicación" data-item-title="Quedada sábado" data-item-desc="Salida 09:00. Punto de encuentro: plaza."
-                  data-item-meta1="Autor: Gestor" data-item-meta2="Fecha: 21/02/2026"><i class="fa-solid fa-eye"></i></button>
-                <a class="btn btn-outline-warning icon-btn" href="/item/editar"><i class="fa-solid fa-pen"></i></a>
-                <button class="btn btn-outline-danger icon-btn"><i class="fa-solid fa-trash"></i></button>
-              </div>
+    <!-- SECCIÓN ACTIVIDADES - Slider de actividades del club -->
+    <section id="actividades" class="py-4">
+        <div class="container p-4 rounded-4 section-bg">
+            <div class="d-flex flex-column flex-md-row gap-3 align-items-md-center justify-content-between mb-4">
+                <div>
+                    <h2 class="h3 mb-1"><i class="fa-solid fa-person-running me-2"></i>Actividades</h2>
+                    <p class="text-body-secondary mb-0">Calendario de actividades y eventos del club.</p>
+                </div>
+                <a class="btn btn-new" th:href="@{/item/nuevo(tipo='actividad')}">
+                    <i class="fa-solid fa-plus me-1"></i> Nueva actividad
+                </a>
             </div>
-          </div>
-        </div>
-      </div>
 
-      <!-- Shop -->
-      <div id="tienda" class="feature-card p-4">
-        <div class="d-flex align-items-center justify-content-between mb-3">
-          <h2 class="h4 mb-0"><i class="fa-solid fa-store me-2"></i>Tienda</h2>
-          <a class="btn btn-outline-accent" href="/item/editar"><i class="fa-solid fa-plus me-2"></i>Nuevo</a>
-        </div>
-        <div class="row g-4">
-          <div class="col-12 col-sm-6 col-lg-3">
-            <div class="card club-card h-100">
-              <img src="/assets/img/club-placeholder.jpg" class="card-img-top" alt="Producto">
-              <div class="card-body">
-                <h3 class="h6 card-title mb-1"><i class="fa-solid fa-shirt me-1"></i> Camiseta club</h3>
-                <p class="card-text text-body-secondary small mb-0">15,00 €</p>
-              </div>
-              <div class="card-footer d-flex gap-2 justify-content-end">
-                <button class="btn btn-outline-accent icon-btn" data-bs-toggle="modal" data-bs-target="#detailModal"
-                  data-item-type="producto" data-item-title="Camiseta club" data-item-desc="Tallas S/M/L. Recogida en entreno."
-                  data-item-meta1="Precio: 15,00 €" data-item-meta2="Estado: Disponible"><i class="fa-solid fa-eye"></i></button>
-                <button class="btn btn-outline-success icon-btn"><i class="fa-solid fa-cart-shopping"></i></button>
-                <a class="btn btn-outline-warning icon-btn" href="/item/editar"><i class="fa-solid fa-pen"></i></a>
-                <button class="btn btn-outline-danger icon-btn"><i class="fa-solid fa-trash"></i></button>
-              </div>
+            <!-- Slider de actividades -->
+            <div class="slider-wrapper">
+                <button id="actividadesPrev" class="slider-control slider-prev" type="button" aria-label="Anterior">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+
+                <div class="slider-viewport" id="actividadesViewport">
+                    <div class="slider-track" id="actividadesTrack">
+                        <!-- Actividades dinámicas desde la base de datos -->
+                        <div class="slide slide-item" th:each="actividad : ${actividades}">
+                            <div class="card club-card h-100">
+                                <!-- Imagen si existe -->
+                                <img th:if="${actividad.photo != null and !actividad.photo.isEmpty()}"
+                                     th:src="@{/imgs/activities/{photo}(photo=${actividad.photo})}"
+                                     class="card-img-top" th:alt="${actividad.title}">
+                                <!-- Icono como fallback si no hay imagen -->
+                                <div th:unless="${actividad.photo != null and !actividad.photo.isEmpty()}"
+                                     class="card-fallback-icon">
+                                    <i th:class="${'fa-solid fa-3x ' + actividad.sportIcon}"></i>
+                                </div>
+                                <div class="card-body">
+                                    <h3 class="h6 card-title mb-1">
+                                        <i th:class="${'fa-solid me-1 ' + actividad.sportIcon}"></i>
+                                        <span th:text="${actividad.title}">Título</span>
+                                    </h3>
+                                    <p class="card-text text-body-secondary small mb-0">
+                                        <span th:text="${actividad.fechaCorta}">Fecha</span>
+                                        <span th:if="${actividad.distancia != null and actividad.distancia > 0}" th:text="' · ' + ${actividad.distancia} + ' km'">Distancia</span>
+                                    </p>
+                                </div>
+                                <div class="card-footer d-flex gap-2 justify-content-end">
+                                    <button class="btn action-btn view-btn" type="button"
+                                            data-bs-toggle="modal" data-bs-target="#actividadModal"
+                                            th:data-actividad-id="${actividad.idactividad}"
+                                            th:data-actividad-title="${actividad.title}"
+                                            th:data-actividad-desc="${actividad.description}"
+                                            th:data-actividad-sport="${actividad.sport}"
+                                            th:data-actividad-fecha="${actividad.fechaFormateada}"
+                                            th:data-actividad-place="${actividad.place}"
+                                            th:data-actividad-dist="${actividad.distancia}">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                    <button class="btn action-btn check-btn" type="button" th:data-actividad-id="${actividad.idactividad}">
+                                        <i class="fa-solid fa-circle-check"></i>
+                                    </button>
+                                    <a class="btn action-btn edit-btn" th:href="@{/actividad/editar/{id}(id=${actividad.idactividad})}">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </a>
+                                    <button class="btn action-btn delete-btn" type="button" th:data-actividad-id="${actividad.idactividad}">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Mensaje si no hay actividades -->
+                        <div class="slide slide-item" th:if="${#lists.isEmpty(actividades)}">
+                            <div class="card club-card h-100 d-flex align-items-center justify-content-center">
+                                <div class="card-body text-center text-muted">
+                                    <i class="fa-solid fa-person-running fa-2x mb-2"></i>
+                                    <p class="mb-0">No hay actividades disponibles</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="actividadesNext" class="slider-control slider-next" type="button" aria-label="Siguiente">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-  </main>
+    </section>
 
-  <footer class="py-4">
-    <div class="container d-flex flex-column flex-md-row gap-2 align-items-md-center justify-content-between">
-      <div class="small">
-        <a class="link-secondary text-decoration-none me-3" href="#">Nosotros</a>
-        <a class="link-secondary text-decoration-none me-3" href="#">Política de cookies</a>
-        <a class="link-secondary text-decoration-none" href="#">Aviso legal</a>
-      </div>
-      <div class="small text-body-secondary">© <span id="year"></span> TrackYours</div>
-    </div>
-  </footer>
+    <!-- SECCIÓN PUBLICACIONES - Slider de noticias del club -->
+    <section id="publicaciones" class="py-4">
+        <div class="container p-4 rounded-4 section-bg">
+            <div class="d-flex flex-column flex-md-row gap-3 align-items-md-center justify-content-between mb-4">
+                <div>
+                    <h2 class="h3 mb-1"><i class="fa-solid fa-clipboard-list me-2"></i>Publicaciones</h2>
+                    <p class="text-body-secondary mb-0">Noticias y avisos para los socios del club.</p>
+                </div>
+                <a class="btn btn-new" th:href="@{/item/nuevo(tipo='publicacion')}">
+                    <i class="fa-solid fa-plus me-1"></i> Nueva publicación
+                </a>
+            </div>
 
-  <!-- Auth Modal -->
-  <div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-sm modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title"><i class="fa-solid fa-right-to-bracket me-2"></i>Log in</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-        </div>
-        <div class="modal-body">
-          <form action="/login" method="post">
-            <div class="mb-3"><label class="form-label">Usuario ID</label><input class="form-control" name="username"></div>
-            <div class="mb-3"><label class="form-label">Contraseña</label><input class="form-control" type="password" name="password"></div>
-            <button class="btn btn-accent w-100" type="submit"><i class="fa-solid fa-right-to-bracket me-1"></i> Entrar</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+            <!-- Slider de publicaciones -->
+            <div class="slider-wrapper">
+                <button id="publicacionesPrev" class="slider-control slider-prev" type="button" aria-label="Anterior">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
 
-  <!-- Detail Modal -->
-  <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <div><div class="badge badge-accent mb-1" data-detail-kind>ITEM</div><h5 class="modal-title mb-0" data-detail-title>Detalle</h5></div>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-        </div>
-        <div class="modal-body">
-          <div class="thumb mb-3"><i class="fa-solid fa-image me-2"></i>Imagen</div>
-          <p class="mb-2" data-detail-desc>—</p>
-          <div class="small text-body-secondary d-none" data-detail-meta1></div>
-          <div class="small text-body-secondary d-none" data-detail-meta2></div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline-accent" data-bs-dismiss="modal">Cerrar</button>
-        </div>
-      </div>
-    </div>
-  </div>
+                <div class="slider-viewport" id="publicacionesViewport">
+                    <div class="slider-track" id="publicacionesTrack">
+                        <!-- Publicaciones dinámicas desde la base de datos -->
+                        <div class="slide slide-item" th:each="publicacion : ${publicaciones}">
+                            <div class="card club-card h-100">
+                                <!-- Imagen si existe -->
+                                <img th:if="${publicacion.photo != null and !publicacion.photo.isEmpty()}"
+                                     th:src="@{/imgs/publishs/{photo}(photo=${publicacion.photo})}"
+                                     class="card-img-top" th:alt="${publicacion.subject}">
+                                <!-- Icono como fallback si no hay imagen -->
+                                <div th:unless="${publicacion.photo != null and !publicacion.photo.isEmpty()}"
+                                     class="card-fallback-icon">
+                                    <i class="fa-solid fa-3x fa-clipboard-list"></i>
+                                </div>
+                                <div class="card-body">
+                                    <h3 class="h6 card-title mb-1">
+                                        <i class="fa-solid fa-clipboard-list me-1"></i>
+                                        <span th:text="${publicacion.subject}">Asunto</span>
+                                    </h3>
+                                    <p class="card-text text-body-secondary small mb-0" th:text="${#strings.abbreviate(publicacion.text, 50)}">Texto...</p>
+                                </div>
+                                <div class="card-footer d-flex gap-2 justify-content-end">
+                                    <button class="btn action-btn view-btn" type="button"
+                                            data-bs-toggle="modal" data-bs-target="#publicacionModal"
+                                            th:data-publicacion-id="${publicacion.idpublicacion}"
+                                            th:data-publicacion-subject="${publicacion.subject}"
+                                            th:data-publicacion-text="${publicacion.text}">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                    <a class="btn action-btn edit-btn" th:href="@{/publicacion/editar/{id}(id=${publicacion.idpublicacion})}">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </a>
+                                    <button class="btn action-btn delete-btn" type="button" th:data-publicacion-id="${publicacion.idpublicacion}">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Mensaje si no hay publicaciones -->
+                        <div class="slide slide-item" th:if="${#lists.isEmpty(publicaciones)}">
+                            <div class="card club-card h-100 d-flex align-items-center justify-content-center">
+                                <div class="card-body text-center text-muted">
+                                    <i class="fa-solid fa-clipboard-list fa-2x mb-2"></i>
+                                    <p class="mb-0">No hay publicaciones disponibles</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-  <script src="/assets/js/app.js"></script>
+                <button id="publicacionesNext" class="slider-control slider-next" type="button" aria-label="Siguiente">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN TIENDA - Slider de productos del club -->
+    <section id="tienda" class="py-4 mb-4">
+        <div class="container p-4 rounded-4 section-bg">
+            <div class="d-flex flex-column flex-md-row gap-3 align-items-md-center justify-content-between mb-4">
+                <div>
+                    <h2 class="h3 mb-1"><i class="fa-solid fa-store me-2"></i>Tienda</h2>
+                    <p class="text-body-secondary mb-0">Productos y merchandising del club.</p>
+                </div>
+                <a class="btn btn-new" th:href="@{/item/nuevo(tipo='producto')}">
+                    <i class="fa-solid fa-plus me-1"></i> Nuevo producto
+                </a>
+            </div>
+
+            <!-- Slider de productos -->
+            <div class="slider-wrapper">
+                <button id="tiendaPrev" class="slider-control slider-prev" type="button" aria-label="Anterior">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+
+                <div class="slider-viewport" id="tiendaViewport">
+                    <div class="slider-track" id="tiendaTrack">
+                        <!-- Productos dinámicos desde la base de datos -->
+                        <div class="slide slide-item" th:each="producto : ${productos}">
+                            <div class="card club-card h-100">
+                                <!-- Imagen si existe -->
+                                <img th:if="${producto.photo != null and !producto.photo.isEmpty()}"
+                                     th:src="@{/imgs/products/{photo}(photo=${producto.photo})}"
+                                     class="card-img-top" th:alt="${producto.name}">
+                                <!-- Icono como fallback si no hay imagen -->
+                                <div th:unless="${producto.photo != null and !producto.photo.isEmpty()}"
+                                     class="card-fallback-icon">
+                                    <i class="fa-solid fa-3x fa-box"></i>
+                                </div>
+                                <div class="card-body">
+                                    <h3 class="h6 card-title mb-1">
+                                        <i class="fa-solid fa-store me-1"></i>
+                                        <span th:text="${producto.name}">Nombre</span>
+                                    </h3>
+                                    <p class="card-text text-body-secondary small mb-0">
+                                        <span th:text="${#numbers.formatDecimal(producto.precio, 1, 2)} + ' €'">0,00 €</span>
+                                    </p>
+                                </div>
+                                <div class="card-footer d-flex gap-2 justify-content-end">
+                                    <button class="btn action-btn view-btn" type="button"
+                                            data-bs-toggle="modal" data-bs-target="#productoModal"
+                                            th:data-producto-id="${producto.idproducto}"
+                                            th:data-producto-name="${producto.name}"
+                                            th:data-producto-desc="${producto.description}"
+                                            th:data-producto-precio="${#numbers.formatDecimal(producto.precio, 1, 2)}"
+                                            th:data-producto-stock="${producto.stock}"
+                                            th:data-producto-photo="${producto.photo}">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                    <button class="btn action-btn check-btn" type="button" th:data-producto-id="${producto.idproducto}">
+                                        <i class="fa-solid fa-cart-shopping"></i>
+                                    </button>
+                                    <a class="btn action-btn edit-btn" th:href="@{/producto/editar/{id}(id=${producto.idproducto})}">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </a>
+                                    <button class="btn action-btn delete-btn" type="button" th:data-producto-id="${producto.idproducto}">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Mensaje si no hay productos -->
+                        <div class="slide slide-item" th:if="${#lists.isEmpty(productos)}">
+                            <div class="card club-card h-100 d-flex align-items-center justify-content-center">
+                                <div class="card-body text-center text-muted">
+                                    <i class="fa-solid fa-store fa-2x mb-2"></i>
+                                    <p class="mb-0">No hay productos disponibles</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="tiendaNext" class="slider-control slider-next" type="button" aria-label="Siguiente">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-2">
+        <div class="container">
+            <div class="row align-items-center text-center text-lg-start">
+                <div class="col-md-3 mb-4 mb-lg-0">
+                    <h3 class="h6 mb-1"><i class="fa-solid fa-circle-info me-2"></i>Info</h3>
+                    <div class="mb-1 text-body-secondary small"><i class="fa-solid fa-envelope me-2"></i> admin@trackyours.com</div>
+                    <div class="mb-1 text-body-secondary small"><i class="fa-solid fa-location-dot me-2"></i> España</div>
+                </div>
+                <div class="col-md-6 d-flex flex-column align-items-center mb-4 mb-lg-0">
+                    <div class="mb-2 d-flex flex-md-row flex-column g-3">
+                        <a class="link-secondary text-decoration-none small px-2 rounded" href="#">Aviso Legal y Condiciones de uso</a>
+                        <a class="link-secondary text-decoration-none small px-2 rounded" href="#">Política de Privacidad</a>
+                        <a class="link-secondary text-decoration-none small px-2 rounded" href="#">Política de cookies</a>
+                    </div>
+                    <div class="small text-body-secondary">© <span id="year"></span> TrackYours</div>
+                </div>
+                <div class="col-md-3 d-flex flex-column align-items-center align-items-lg-end small">
+                    <a href="#" class="link-secondary mb-2 px-3 rounded" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" class="link-secondary px-3 rounded" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL LOGIN -->
+    <div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fa-solid fa-right-to-bracket me-2"></i>Log in</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/logginprocess}" method="post" id="loginForm">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Email</label>
+                                <input class="form-control" name="username" id="loginEmail" autocomplete="username" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Contraseña</label>
+                                <input class="form-control" type="password" name="password" autocomplete="current-password" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Selecciona tu club</label>
+                            <select class="form-select" name="clubId" id="clubSelector" disabled>
+                                <option value="">Introduce tu email para ver tus clubs</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-accent w-100" type="submit">
+                            <i class="fa-solid fa-right-to-bracket me-1"></i> Entrar
+                        </button>
+                        <div class="text-center mt-3">
+                            <a class="link-secondary small text-decoration-none" href="#">¿Olvidaste la contraseña?</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DETALLE ACTIVIDAD -->
+    <div class="modal fade" id="actividadModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div>
+                        <div class="badge bg-success mb-1"><i class="fa-solid fa-person-running me-1"></i>Actividad</div>
+                        <h5 class="modal-title mb-0" data-actividad-title>Título de la actividad</h5>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-sm table-borderless mb-0">
+                        <tbody>
+                            <tr><td class="text-body-secondary fw-semibold" style="width: 35%;">Título</td><td data-actividad-title>Título</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Descripción</td><td data-actividad-desc>Descripción</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Deporte</td><td data-actividad-sport>Deporte</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Fecha</td><td data-actividad-fecha>Fecha</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Lugar</td><td data-actividad-place>Lugar</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Distancia</td><td data-actividad-dist>Distancia</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DETALLE PUBLICACIÓN -->
+    <div class="modal fade" id="publicacionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div>
+                        <div class="badge bg-primary mb-1"><i class="fa-solid fa-clipboard-list me-1"></i>Publicación</div>
+                        <h5 class="modal-title mb-0" data-publicacion-subject>Asunto de la publicación</h5>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-sm table-borderless mb-0">
+                        <tbody>
+                            <tr><td class="text-body-secondary fw-semibold" style="width: 35%;">Asunto</td><td data-publicacion-subject>Asunto</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Texto</td><td data-publicacion-text>Texto de la publicación</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DETALLE PRODUCTO -->
+    <div class="modal fade" id="productoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div>
+                        <div class="badge bg-warning text-dark mb-1"><i class="fa-solid fa-store me-1"></i>Producto</div>
+                        <h5 class="modal-title mb-0" data-producto-name>Nombre del producto</h5>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-sm table-borderless mb-0">
+                        <tbody>
+                            <tr><td class="text-body-secondary fw-semibold" style="width: 35%;">Nombre</td><td data-producto-name>Nombre</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Descripción</td><td data-producto-desc>Descripción</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Precio</td><td data-producto-precio>Precio</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Stock</td><td data-producto-stock>Stock</td></tr>
+                        </tbody>
+                    </table>
+                    <!-- Imagen del producto (solo si existe) -->
+                    <div class="text-center mt-3" id="producto-imagen-container" style="display: none;">
+                        <img id="producto-imagen" src="" alt="Imagen del producto" class="img-fluid rounded" style="max-height: 200px;">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+                integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script th:src="@{/js/app.js}"></script>
 </body>
 </html>

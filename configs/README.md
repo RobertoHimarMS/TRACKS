@@ -1,1 +1,0 @@
-Carpeta para albergar archivos de configuración de la aplicaición

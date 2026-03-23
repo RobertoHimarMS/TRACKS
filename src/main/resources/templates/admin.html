@@ -1,142 +1,437 @@
-<!doctype html>
-<html lang="es">
+<!-----------------------------------------------------------
+    CONSOLA DE ADMINISTRACIÓN
+    TrackYours Sports - Gestión de solicitudes y tickets
+------------------------------------------------------------>
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="https://www.thymeleaf.org">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TrackYours • Administración</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-                integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-                crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="/assets/css/styles.css" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TrackYours • Administración</title>
+
+    <!-- CSRF tokens para peticiones AJAX -->
+    <meta name="_csrf" th:content="${_csrf?.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf?.headerName}"/>
+
+    <!-- CSS y iconos externos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+                            integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+                            crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+                            integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/mystyles.css?v=1.3}">
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg sticky-top">
-    <div class="container">
-      <a class="navbar-brand d-flex align-items-center gap-2 fw-semibold" href="/">
-        <span class="brand-mark"><i class="fa-solid fa-person-running"></i></span>
-        <span>TrackYours</span>
-      </a>
-      <div class="ms-auto">
-        <button class="btn btn-accent btn-sm px-3" data-bs-toggle="modal" data-bs-target="#authModal"><i class="fa-solid fa-right-to-bracket me-1"></i> Log In</button>
-      </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2 p-2" href="home.html">
+                <span class="brand-mark">
+                    <svg class="logo-icon">
+                        <use th:href="@{/icons/logo-for-use.svg#logo-icon}"></use>
+                    </svg>
+                </span>
+                <span>TrackYours</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-lg-1">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/}"><i class="fa-solid fa-house me-1"></i> Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="${session.userlogged == null} ? @{/} : (${session.rollogged == 'admin'} ? @{/admin} : @{/club/{id}(id=${session.clublogged.idclub})})"><i class="fa-solid fa-users me-1"></i> Mi Club</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/carne}"><i class="fa-solid fa-id-card me-1"></i> Mi Carné</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/club#tienda}"><i class="fa-solid fa-store me-1"></i> Tienda</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/home#contacto}"><i class="fa-solid fa-envelope me-1"></i> Contacto</a></li>
+                </ul>
+                <!-- No logueado: mostrar botón Iniciar sesión -->
+                <div class="d-flex gap-2" th:if="${session.userlogged == null}">
+                    <button class="btn btn-accent btn-sm px-3" data-bs-toggle="modal" data-bs-target="#authModal">
+                        <i class="fa-solid fa-right-to-bracket me-1"></i> Iniciar sesión
+                    </button>
+                </div>
+                <!-- Logueado: mostrar info usuario y botón Cerrar sesión -->
+                <div class="d-flex align-items-center gap-3" th:if="${session.userlogged != null}">
+                    <div class="text-end small">
+                        <div class="fw-semibold" th:text="${session.userlogged.name + ' ' + session.userlogged.surname}">Nombre Apellido</div>
+                        <div class="text-muted">
+                            <span th:text="${session.clublogged.name}">Club</span>
+                            <span class="text-capitalize" th:text="'(' + ${session.rollogged} + ')'">(rol)</span>
+                        </div>
+                    </div>
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="btn btn-accent btn-sm px-3">
+                            <i class="fa-solid fa-right-from-bracket me-1"></i> Cerrar sesión
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HEADER - Consola de administración/gestión -->
+    <header class="py-4">
+        <div class="container">
+            <div class="admin-card p-4 rounded-4">
+                <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="admin-icon">
+                            <i class="fa-solid fa-screwdriver-wrench"></i>
+                        </div>
+                        <!-- Consola de Administración (solo para admin del sistema) -->
+                        <div th:if="${session.rollogged == 'admin' and session.clublogged.idclub == 1}">
+                            <h1 class="h4 mb-1">Consola de Administración</h1>
+                            <p class="text-body-secondary mb-0 small">Gestión de solicitudes y tickets del sistema</p>
+                        </div>
+                        <!-- Consola de Gestión del Club (para managers y admins de club) -->
+                        <div th:if="${session.rollogged == 'manager'}">
+                            <h1 class="h4 mb-1">Consola de Gestión del Club</h1>
+                            <p class="text-body-secondary mb-0 small">Gestión de actividades, publicaciones y productos</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- SECCIÓN SOLICITUDES DE CLUBES (solo admin del sistema) -->
+    <section id="solicitudes-clubes" class="py-3" th:if="${session.rollogged == 'admin' and session.clublogged.idclub == 1}">
+        <div class="container p-4 rounded-4 section-bg">
+            <div class="d-flex flex-column flex-md-row gap-3 align-items-md-center justify-content-between mb-4">
+                <div>
+                    <h2 class="h3 mb-1"><i class="fa-solid fa-building me-2"></i>Solicitudes de clubes</h2>
+                    <p class="text-body-secondary mb-0">Peticiones de alta de nuevos clubes.</p>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Club</th>
+                            <th>Deporte</th>
+                            <th>Fecha</th>
+                            <th>Gestor</th>
+                            <th>Estado</th>
+                            <th class="text-end">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="req : ${clubRequests}">
+                            <td><span class="text-body-secondary small" th:text="${req.idrequest}">ID</span></td>
+                            <td>
+                                <i class="fa-solid fa-building me-1"></i>
+                                <span th:text="${req.clbTarget}">Club</span>
+                            </td>
+                            <td th:text="${req.clbSport}">Deporte</td>
+                            <td th:text="${#dates.format(req.createdAt, 'dd/MM/yyyy')}">Fecha</td>
+                            <td th:text="${req.usrName + ' ' + req.usrSurname}">Gestor</td>
+                            <td>
+                                <span class="badge badge-status"
+                                      th:classappend="${req.estado.name() == 'pending'} ? 'badge-warning' : (${req.estado.name() == 'accepted'} ? 'badge-success' : 'badge-danger')"
+                                      th:text="${req.estado.name() == 'pending'} ? 'Pendiente' : (${req.estado.name() == 'accepted'} ? 'Aceptada' : 'Rechazada')">
+                                    Estado
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <button class="btn action-btn check-btn" title="Aprobar" th:if="${req.estado.name() == 'pending'}" th:data-id="${req.idrequest}"><i class="fa-solid fa-check"></i></button>
+                                <button class="btn action-btn delete-btn" title="Rechazar" th:if="${req.estado.name() == 'pending'}" th:data-id="${req.idrequest}"><i class="fa-solid fa-xmark"></i></button>
+                                <button class="btn action-btn view-btn view-request-btn" title="Ver detalle" th:data-id="${req.idrequest}"><i class="fa-solid fa-eye"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN SOLICITUDES DE SOCIOS (solo managers de club) -->
+    <section id="solicitudes-socios" class="py-3" th:if="${session.rollogged == 'manager'}">
+        <div class="container p-4 rounded-4 section-bg">
+            <div class="d-flex flex-column flex-md-row gap-3 align-items-md-center justify-content-between mb-4">
+                <div>
+                    <h2 class="h3 mb-1"><i class="fa-solid fa-user-plus me-2"></i>Solicitudes de socios</h2>
+                    <p class="text-body-secondary mb-0">Peticiones de alta de nuevos socios en tu club.</p>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Solicitante</th>
+                            <th>Email</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th class="text-end">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="req : ${partnerRequests}">
+                            <td><span class="text-body-secondary small" th:text="${req.idrequest}">ID</span></td>
+                            <td>
+                                <i class="fa-solid fa-user me-1"></i>
+                                <span th:text="${req.usrName + ' ' + req.usrSurname}">Nombre Apellido</span>
+                            </td>
+                            <td th:text="${req.usrEmail}">email@ejemplo.com</td>
+                            <td th:text="${#dates.format(req.createdAt, 'dd/MM/yyyy')}">Fecha</td>
+                            <td>
+                                <span class="badge badge-status"
+                                      th:classappend="${req.estado.name() == 'pending'} ? 'badge-warning' : (${req.estado.name() == 'accepted'} ? 'badge-success' : 'badge-danger')"
+                                      th:text="${req.estado.name() == 'pending'} ? 'Pendiente' : (${req.estado.name() == 'accepted'} ? 'Aceptada' : 'Rechazada')">
+                                    Estado
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <button class="btn action-btn check-btn" title="Aprobar" th:if="${req.estado.name() == 'pending'}" th:data-id="${req.idrequest}"><i class="fa-solid fa-check"></i></button>
+                                <button class="btn action-btn delete-btn" title="Rechazar" th:if="${req.estado.name() == 'pending'}" th:data-id="${req.idrequest}"><i class="fa-solid fa-xmark"></i></button>
+                                <button class="btn action-btn view-btn view-partner-request-btn" title="Ver detalle" th:data-id="${req.idrequest}"><i class="fa-solid fa-eye"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN TICKETS DE SOPORTE (solo admin del sistema) -->
+    <section id="tickets-soporte" class="py-3" th:if="${session.rollogged == 'admin' and session.clublogged.idclub == 1}">
+        <div class="container p-4 rounded-4 section-bg">
+            <div class="d-flex flex-column flex-md-row gap-3 align-items-md-center justify-content-between mb-4">
+                <div>
+                    <h2 class="h3 mb-1"><i class="fa-solid fa-ticket me-2"></i>Tickets de Soporte</h2>
+                    <p class="text-body-secondary mb-0">Incidencias y consultas de los usuarios.</p>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Asunto</th>
+                            <th>Fecha</th>
+                            <th>Email</th>
+                            <th>Estado</th>
+                            <th class="text-end">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="ticket : ${tickets}">
+                            <td><span class="text-body-secondary small" th:text="${ticket.idticket}">ID</span></td>
+                            <td>
+                                <i class="fa-solid fa-envelope me-1"></i>
+                                <span th:text="${ticket.subject}">Asunto</span>
+                            </td>
+                            <td th:text="${#dates.format(ticket.createdAt, 'dd/MM/yyyy')}">Fecha</td>
+                            <td th:text="${ticket.email}">Email</td>
+                            <td>
+                                <span class="badge badge-status"
+                                      th:classappend="${ticket.handled} ? 'badge-success' : 'badge-warning'"
+                                      th:text="${ticket.handled} ? 'Resuelto' : 'Pendiente'">
+                                    Estado
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <button class="btn action-btn check-btn" title="Resolver" th:if="${!ticket.handled}" th:data-id="${ticket.idticket}"><i class="fa-solid fa-check"></i></button>
+                                <button class="btn action-btn view-btn view-ticket-btn" title="Ver detalle" th:data-id="${ticket.idticket}"><i class="fa-solid fa-eye"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-2 mt-5">
+        <div class="container">
+            <div class="row align-items-center text-center text-lg-start">
+                <div class="col-md-3 mb-4 mb-lg-0">
+                    <h3 class="h6 mb-1"><i class="fa-solid fa-circle-info me-2"></i>Info</h3>
+                    <div class="mb-1 text-body-secondary small"><i class="fa-solid fa-envelope me-2"></i> admin@trackyours.com</div>
+                    <div class="mb-1 text-body-secondary small"><i class="fa-solid fa-location-dot me-2"></i> España</div>
+                </div>
+                <div class="col-md-6 d-flex flex-column align-items-center mb-4 mb-lg-0">
+                    <div class="mb-2 d-flex flex-md-row flex-column g-3">
+                        <a class="link-secondary text-decoration-none small px-2 rounded" href="#">Aviso Legal y Condiciones de uso</a>
+                        <a class="link-secondary text-decoration-none small px-2 rounded" href="#">Política de Privacidad</a>
+                        <a class="link-secondary text-decoration-none small px-2 rounded" href="#">Política de cookies</a>
+                    </div>
+                    <div class="small text-body-secondary">© <span id="year"></span> TrackYours</div>
+                </div>
+                <div class="col-md-3 d-flex flex-column align-items-center align-items-lg-end small">
+                    <a href="#" class="link-secondary mb-2 px-3 rounded" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" class="link-secondary px-3 rounded" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL LOGIN -->
+    <div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fa-solid fa-right-to-bracket me-2"></i>Log in</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/logginprocess}" method="post" id="loginForm">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Email</label>
+                                <input class="form-control" name="username" id="loginEmail" autocomplete="username" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Contraseña</label>
+                                <input class="form-control" type="password" name="password" autocomplete="current-password" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Selecciona tu club</label>
+                            <select class="form-select" name="clubId" id="clubSelector" disabled>
+                                <option value="">Introduce tu email para ver tus clubs</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-accent w-100" type="submit">
+                            <i class="fa-solid fa-right-to-bracket me-1"></i> Entrar
+                        </button>
+                        <div class="text-center mt-3">
+                            <a class="link-secondary small text-decoration-none" href="#">¿Olvidaste la contraseña?</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-  </nav>
 
-  <main class="py-4 py-lg-5">
-    <div class="container">
-      <div class="feature-card p-4">
-        <div class="d-flex align-items-center justify-content-between mb-4">
-          <h1 class="h3 mb-0"><i class="fa-solid fa-screwdriver-wrench me-2"></i>Consola de Administración</h1>
-          <span class="badge badge-accent"><i class="fa-solid fa-shield-halved me-1"></i>ADMIN</span>
+    <!-- MODAL SOLICITUD DE CLUB -->
+    <div class="modal fade" id="solicitudClubModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div>
+                        <div class="badge bg-primary mb-1"><i class="fa-solid fa-building me-1"></i>Solicitud de Club</div>
+                        <h5 class="modal-title mb-0" id="requestClubNombre">Club YY - Petanca</h5>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <h6 class="text-body-secondary mb-2"><i class="fa-solid fa-building me-1"></i> Datos del Club</h6>
+                    <table class="table table-sm table-borderless mb-3">
+                        <tbody>
+                            <tr><td class="text-body-secondary fw-semibold" style="width: 35%;">Nombre</td><td id="req-clb-target">Club YY</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Deporte</td><td id="req-clb-sport">Petanca</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Descripción</td><td id="req-clb-description">Club de petanca de Arucas</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Email</td><td id="req-clb-email">info@clubyy.com</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Código Postal</td><td id="req-clb-cp">35400</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Ciudad</td><td id="req-clb-city">Arucas</td></tr>
+                        </tbody>
+                    </table>
+                    <h6 class="text-body-secondary mb-2"><i class="fa-solid fa-user-gear me-1"></i> Datos del Gestor</h6>
+                    <table class="table table-sm table-borderless mb-3">
+                        <tbody>
+                            <tr><td class="text-body-secondary fw-semibold" style="width: 35%;">Nombre</td><td id="req-usr-name">Gestor YY</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Apellidos</td><td id="req-usr-surname">—</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">DNI</td><td id="req-usr-dni">88888888Y</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Email</td><td id="req-usr-email">gestoryy@gmail.com</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Teléfono</td><td id="req-usr-phone">677-878787</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Ciudad</td><td id="req-usr-city">Arucas (35400)</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="d-flex align-items-center gap-2 pt-2 border-top">
+                        <span class="text-body-secondary">Estado:</span>
+                        <span class="badge badge-status" id="req-estado">Pendiente</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
         </div>
-
-        <h2 class="h6 mb-3"><i class="fa-solid fa-building me-2"></i>Solicitudes de Clubes</h2>
-        <div class="table-responsive mb-5">
-          <table class="table align-middle">
-            <thead><tr><th>ID</th><th>Club</th><th>Fecha</th><th>Gestor</th><th class="text-end">Acciones</th></tr></thead>
-            <tbody>
-              <tr>
-                <td>C07</td><td><i class="fa-solid fa-person-hiking me-1"></i> Yoyo Trail</td><td>21/02/2026</td><td>SS00T11</td>
-                <td class="text-end">
-                  <button class="btn btn-outline-success icon-btn"><i class="fa-solid fa-check"></i></button>
-                  <button class="btn btn-outline-danger icon-btn"><i class="fa-solid fa-xmark"></i></button>
-                  <button class="btn btn-outline-accent icon-btn" data-bs-toggle="modal" data-bs-target="#detailModal"
-                          data-item-type="petición" data-item-title="Alta club: Yoyo Trail"
-                          data-item-desc="Solicitud de alta de club pendiente."
-                          data-item-meta1="Gestor: SS00T11" data-item-meta2="Fecha: 21/02/2026"><i class="fa-solid fa-eye"></i></button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h2 class="h6 mb-3"><i class="fa-solid fa-user-plus me-2"></i>Solicitudes de Socios</h2>
-        <div class="table-responsive mb-5">
-          <table class="table align-middle">
-            <thead><tr><th>ID</th><th>Usuario</th><th>Club</th><th>Fecha</th><th class="text-end">Acciones</th></tr></thead>
-            <tbody>
-              <tr>
-                <td>S12</td><td><i class="fa-solid fa-user me-1"></i> Roberto H Medina</td><td>Club BB</td><td>21/02/2026</td>
-                <td class="text-end">
-                  <button class="btn btn-outline-success icon-btn"><i class="fa-solid fa-check"></i></button>
-                  <button class="btn btn-outline-danger icon-btn"><i class="fa-solid fa-xmark"></i></button>
-                  <button class="btn btn-outline-accent icon-btn" data-bs-toggle="modal" data-bs-target="#detailModal"
-                          data-item-type="petición" data-item-title="Alta socio: Roberto H Medina"
-                          data-item-desc="Solicitud de alta de socio pendiente."
-                          data-item-meta1="Club: Club BB" data-item-meta2="Fecha: 21/02/2026"><i class="fa-solid fa-eye"></i></button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h2 class="h6 mb-3"><i class="fa-solid fa-ticket me-2"></i>Tickets de Soporte</h2>
-        <div class="table-responsive">
-          <table class="table align-middle">
-            <thead><tr><th>ID</th><th>Asunto</th><th>Fecha</th><th>Usuario</th><th>Estado</th><th class="text-end">Ver</th></tr></thead>
-            <tbody>
-              <tr>
-                <td>R031</td><td><i class="fa-solid fa-lock me-1"></i> Acceso imposible</td><td>21/02/2026</td><td>47525…</td><td><span class="badge badge-accent">Abierto</span></td>
-                <td class="text-end">
-                  <button class="btn btn-outline-accent icon-btn" data-bs-toggle="modal" data-bs-target="#detailModal"
-                          data-item-type="ticket" data-item-title="Acceso imposible"
-                          data-item-desc="El usuario indica que no puede acceder con sus credenciales."
-                          data-item-meta1="Estado: Abierto" data-item-meta2="Fecha: 21/02/2026"><i class="fa-solid fa-eye"></i></button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
     </div>
-  </main>
 
-  <footer class="py-4">
-    <div class="container d-flex justify-content-between">
-      <div class="small text-body-secondary">© <span id="year"></span> TrackYours</div>
+    <!-- MODAL SOLICITUD DE SOCIO -->
+    <div class="modal fade" id="solicitudSocioModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div>
+                        <div class="badge bg-success mb-1"><i class="fa-solid fa-user-plus me-1"></i>Solicitud de Socio</div>
+                        <h5 class="modal-title mb-0" id="partnerRequestNombre">Nombre Solicitante</h5>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <h6 class="text-body-secondary mb-2"><i class="fa-solid fa-building me-1"></i> Club solicitado</h6>
+                    <table class="table table-sm table-borderless mb-3">
+                        <tbody>
+                            <tr><td class="text-body-secondary fw-semibold" style="width: 35%;">Club</td><td id="partner-club-name">Club AA - Running</td></tr>
+                        </tbody>
+                    </table>
+                    <h6 class="text-body-secondary mb-2"><i class="fa-solid fa-user me-1"></i> Datos del Solicitante</h6>
+                    <table class="table table-sm table-borderless mb-3">
+                        <tbody>
+                            <tr><td class="text-body-secondary fw-semibold" style="width: 35%;">Nombre</td><td id="partner-usr-name">Nieves</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Apellidos</td><td id="partner-usr-surname">SM</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">DNI</td><td id="partner-usr-dni">42769320S</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Email</td><td id="partner-usr-email">nievessm@gmail.com</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Teléfono</td><td id="partner-usr-phone">675-753753</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Ciudad</td><td id="partner-usr-city">Arucas (35414)</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="d-flex align-items-center gap-2 pt-2 border-top">
+                        <span class="text-body-secondary">Estado:</span>
+                        <span class="badge badge-status" id="partner-estado">Pendiente</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
     </div>
-  </footer>
 
-  <div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-sm modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title"><i class="fa-solid fa-right-to-bracket me-2"></i>Log in</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+    <!-- MODAL TICKET -->
+    <div class="modal fade" id="ticketModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div>
+                        <div class="badge bg-danger mb-1"><i class="fa-solid fa-ticket me-1"></i>Ticket de Soporte</div>
+                        <h5 class="modal-title mb-0" id="ticket-subject">Problema de acceso</h5>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-sm table-borderless mb-0">
+                        <tbody>
+                            <tr><td class="text-body-secondary fw-semibold" style="width: 35%;">Asunto</td><td id="ticket-asunto">Problema de acceso</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Descripción</td><td id="ticket-descripcion">No puedo iniciar sesion en la aplicacion movil</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Email</td><td id="ticket-email">roberto@gmail.com</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Estado</td><td><span class="badge badge-status" id="ticket-estado">Pendiente</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
         </div>
-        <div class="modal-body">
-          <form action="/login" method="post">
-            <div class="mb-3"><label class="form-label">Usuario ID</label><input class="form-control" name="username"></div>
-            <div class="mb-3"><label class="form-label">Contraseña</label><input class="form-control" type="password" name="password"></div>
-            <button class="btn btn-accent w-100" type="submit"><i class="fa-solid fa-right-to-bracket me-1"></i> Entrar</button>
-          </form>
-        </div>
-      </div>
     </div>
-  </div>
 
-  <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <div><div class="badge badge-accent mb-1" data-detail-kind>ITEM</div><h5 class="modal-title mb-0" data-detail-title>Detalle</h5></div>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-        </div>
-        <div class="modal-body">
-          <div class="thumb mb-3"><i class="fa-solid fa-image me-2"></i>Imagen</div>
-          <p class="mb-2" data-detail-desc>—</p>
-          <div class="small text-body-secondary d-none" data-detail-meta1></div>
-          <div class="small text-body-secondary d-none" data-detail-meta2></div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline-accent" data-bs-dismiss="modal">Cerrar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-  <script src="/assets/js/app.js"></script>
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script th:src="@{/js/app.js}"></script>
 </body>
 </html>
