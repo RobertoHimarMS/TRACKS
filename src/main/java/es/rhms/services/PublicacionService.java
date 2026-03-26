@@ -33,6 +33,15 @@ public class PublicacionService {
 	}
 
 	/**
+	 * Busca una publicación por su ID
+	 * @param idpublicacion ID de la publicación
+	 * @return La publicación o null si no existe
+	 */
+	public Publicacion findById(int idpublicacion) {
+		return publicacionRepository.findById(idpublicacion).orElse(null);
+	}
+
+	/**
 	 * Elimina una publicación por su ID
 	 * @param idpublicacion ID de la publicación a eliminar
 	 */

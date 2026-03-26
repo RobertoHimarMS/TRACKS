@@ -19,6 +19,7 @@ import es.rhms.models.Request.EstadoRequest;
 import es.rhms.models.Request.TipoRequest;
 import es.rhms.models.Socios.RolSocio;
 import es.rhms.models.Usuario;
+import es.rhms.repositories.RequestRepository;
 import es.rhms.services.ClubService;
 import es.rhms.services.RequestService;
 import es.rhms.services.SociosService;
@@ -43,21 +44,31 @@ public class ApiRequest {
 	@Autowired
 	private SociosService sociosService;
 
+	@Autowired
+	private RequestRepository requestRepository;
+
 	/**
-	 * Procesa la solicitud de alta de socio desde el formulario
-	 * Guarda la petición en BD y redirige a la vista del club
+	 * Procesa solicitudes de alta (club o socio) desde el formulario unificado
 	 *
-	 * Si el usuario está logueado, usa los datos de sesión.
-	 * Si no está logueado, usa los datos del formulario.
+	 * TIPO CLUB:
+	 * - Cualquier visitante puede solicitar
+	 * - Redirige a /home con mensaje
+	 *
+	 * TIPO PARTNER:
+	 * - Cualquier visitante puede solicitar alta en un club específico
+	 * - Si usuario logueado, usa datos de sesión
+	 * - Verifica duplicados (email + club)
+	 * - Redirige a /club/{idclub} con mensaje
 	 */
 	@PostMapping("/new")
 	public RedirectView nuevaSolicitud(
+			@RequestParam String type,
 			@RequestParam String clb_target,
 			@RequestParam String clb_description,
 			@RequestParam String clb_sport,
 			@RequestParam String clb_email,
-			@RequestParam String clb_cp,
-			@RequestParam String clb_city,
+			@RequestParam(required = false) String clb_cp,
+			@RequestParam(required = false) String clb_city,
 			@RequestParam(required = false) String usr_name,
 			@RequestParam(required = false) String usr_surname,
 			@RequestParam(required = false) String usr_email,
@@ -72,25 +83,40 @@ public class ApiRequest {
 			HttpServletRequest httpRequest) {
 
 		try {
-			// Crear la solicitud de tipo partner
-			Request request = new Request();
-			request.setTipo(TipoRequest.partner);
-			request.setEstado(EstadoRequest.pending);
-
-			// Datos del club (inmutables)
-			request.setClbTarget(clb_target);
-			request.setClbDescription(clb_description);
-			request.setClbSport(clb_sport);
-			request.setClbEmail(clb_email);
-			request.setClbCp(clb_cp);
-			request.setClbCity(clb_city);
-
 			// Verificar si el usuario está logueado
 			HttpSession session = httpRequest.getSession(false);
 			Usuario usuarioLogueado = null;
 			if (session != null && session.getAttribute("userlogged") != null) {
 				usuarioLogueado = (Usuario) session.getAttribute("userlogged");
 			}
+
+			// Determinar tipo de solicitud
+			TipoRequest tipoSolicitud = "club".equals(type) ? TipoRequest.club : TipoRequest.partner;
+			String emailSolicitante = (usuarioLogueado != null) ? usuarioLogueado.getEmail() : usr_email;
+
+			// Verificar duplicados según tipo (solo para solicitud de socio)
+			if (tipoSolicitud == TipoRequest.partner) {
+				Request existingRequest = requestRepository.findByTipoAndUsrEmailAndClbTargetAndEstado(
+						TipoRequest.partner, emailSolicitante, clb_target, EstadoRequest.pending);
+
+				if (existingRequest != null) {
+					redirectAttributes.addAttribute("mensaje", "duplicate");
+					return new RedirectView("/club/" + clubId, true);
+				}
+			}
+
+			// Crear la solicitud
+			Request request = new Request();
+			request.setTipo(tipoSolicitud);
+			request.setEstado(EstadoRequest.pending);
+
+			// Datos del club
+			request.setClbTarget(clb_target);
+			request.setClbDescription(clb_description);
+			request.setClbSport(clb_sport);
+			request.setClbEmail(clb_email);
+			request.setClbCp(clb_cp);
+			request.setClbCity(clb_city);
 
 			// Datos del solicitante
 			if (usuarioLogueado != null) {
@@ -99,7 +125,7 @@ public class ApiRequest {
 				request.setUsrName(usuarioLogueado.getName());
 				request.setUsrSurname(usuarioLogueado.getSurname());
 				request.setUsrEmail(usuarioLogueado.getEmail());
-				request.setUsrPasswd(usuarioLogueado.getPasswd());                            // Ya está codificada con {noop}
+				request.setUsrPasswd(usuarioLogueado.getPasswd());
 				request.setUsrCp(usuarioLogueado.getCp());
 				request.setUsrCity(usuarioLogueado.getCity());
 				request.setUsrPhone(usuarioLogueado.getPhone());
@@ -111,12 +137,13 @@ public class ApiRequest {
 				request.setUsrName(usr_name);
 				request.setUsrSurname(usr_surname);
 				request.setUsrEmail(usr_email);
-				request.setUsrPasswd(usr_passwd);
+				// Para tipo club, añadir prefijo {noop} a la contraseña
+				request.setUsrPasswd(tipoSolicitud == TipoRequest.club ? "{noop}" + usr_passwd : usr_passwd);
 				request.setUsrCp(usr_cp);
 				request.setUsrCity(usr_city);
 				request.setUsrPhone(usr_phone);
 
-				// Fecha de nacimiento (si se proporciona)
+				// Fecha de nacimiento
 				if (usr_borned != null && !usr_borned.isEmpty()) {
 					try {
 						request.setUsrBorned(new java.text.SimpleDateFormat("yyyy-MM-dd").parse(usr_borned));
@@ -126,19 +153,28 @@ public class ApiRequest {
 				}
 			}
 
-			// Auditoría: usuario del sistema (ID 1 = System) o el usuario logueado
+			// Auditoría
 			int updatedBy = (usuarioLogueado != null) ? usuarioLogueado.getIduser() : 1;
 			request.setUpdatedBy(updatedBy);
 
 			// Guardar la solicitud
 			requestService.save(request);
 
+			// Redirección según tipo
 			redirectAttributes.addAttribute("mensaje", "ok");
-			return new RedirectView("/club/" + clubId, true);
+			if (tipoSolicitud == TipoRequest.club) {
+				return new RedirectView("/home", true);
+			} else {
+				return new RedirectView("/club/" + clubId, true);
+			}
 
 		} catch (Exception e) {
 			redirectAttributes.addAttribute("mensaje", "ko");
-			return new RedirectView("/club/" + clubId, true);
+			if ("club".equals(type)) {
+				return new RedirectView("/home", true);
+			} else {
+				return new RedirectView("/club/" + clubId, true);
+			}
 		}
 	}
 
@@ -151,21 +187,6 @@ public class ApiRequest {
 
 	/**
 	 * Resuelve una petición (aceptar o rechazar)
-	 *
-	 * TIPO CLUB (admin del sistema):
-	 * - accept=true: crea Usuario, Club y relación Socios (rol manager)
-	 * - accept=false: actualiza estado a rejected
-	 *
-	 * TIPO PARTNER (manager del club):
-	 * - accept=true:
-	 *   - Si usuario existe: crea relación Socios (rol partner)
-	 *   - Si usuario no existe: crea Usuario + relación Socios (rol partner)
-	 * - accept=false: actualiza estado a rejected
-	 *
-	 * @param id ID de la petición
-	 * @param accept true para aceptar, false para rechazar
-	 * @param httpRequest HttpServletRequest para obtener sesión
-	 * @return ResponseEntity con JSON {status, message}
 	 */
 	@PostMapping("/edit/{id}")
 	@Transactional
@@ -174,103 +195,45 @@ public class ApiRequest {
 			@RequestParam boolean accept,
 			HttpServletRequest httpRequest) {
 
-		// Obtener usuario de la sesión
 		HttpSession session = httpRequest.getSession(false);
 		if (session == null || session.getAttribute("userlogged") == null) {
 			return ResponseEntity.status(401).body(Map.of("error", "No autorizado"));
 		}
 
 		Usuario actualUser = (Usuario) session.getAttribute("userlogged");
+		String rol = (String) session.getAttribute("rollogged");
+		Club club = (Club) session.getAttribute("clublogged");
 		int actualUserId = actualUser.getIduser();
 
-		// Buscar la petición
 		Request req = requestService.findById(id).orElse(null);
 		if (req == null) {
 			return ResponseEntity.notFound().build();
 		}
 
-		// Solo se pueden procesar peticiones pendientes
 		if (req.getEstado() != EstadoRequest.pending) {
 			return ResponseEntity.badRequest().body(Map.of("error", "La petición ya ha sido procesada"));
 		}
 
-		// Procesar según el tipo de petición
 		if (req.getTipo() == TipoRequest.club) {
+			if (!"admin".equals(rol)) {
+				return ResponseEntity.status(403).body(Map.of("error", "No tiene permisos para procesar esta solicitud"));
+			}
 			return procesarPeticionClub(req, accept, actualUserId);
 		} else if (req.getTipo() == TipoRequest.partner) {
+			if (!"manager".equals(rol) || club == null) {
+				return ResponseEntity.status(403).body(Map.of("error", "No tiene permisos para procesar esta solicitud"));
+			}
+			if (!club.getName().equals(req.getClbTarget())) {
+				return ResponseEntity.status(403).body(Map.of("error", "No tiene permisos para procesar solicitudes de este club"));
+			}
 			return procesarPeticionPartner(req, accept, actualUserId);
 		} else {
 			return ResponseEntity.badRequest().body(Map.of("error", "Tipo de petición desconocido"));
 		}
 	}
 
-	/**
-	 * Procesa una petición de tipo CLUB (alta de nuevo club)
-	 * Solo puede ser procesada por un admin del sistema
-	 */
 	private ResponseEntity<Map<String, String>> procesarPeticionClub(Request req, boolean accept, int actualUserId) {
 		if (accept) {
-			// Crear Usuario
-			Usuario usuario = new Usuario();
-			usuario.setDni(req.getUsrDni());
-			usuario.setName(req.getUsrName());
-			usuario.setSurname(req.getUsrSurname());
-			usuario.setEmail(req.getUsrEmail());
-			usuario.setPasswd("{noop}" + req.getUsrPasswd());
-			usuario.setCp(req.getUsrCp());
-			usuario.setCity(req.getUsrCity());
-			usuario.setBorned(req.getUsrBorned());
-			usuario.setPhone(req.getUsrPhone());
-			usuario.setPhoto(req.getUsrPhoto());
-			usuario.setUpdatedBy(actualUserId);
-			usuario.setRequest(req);
-			Usuario usuarioGuardado = usuarioService.save(usuario);
-
-			// Crear Club
-			Club club = new Club();
-			club.setName(req.getClbTarget());
-			club.setDescription(req.getClbDescription());
-			club.setSport(req.getClbSport());
-			club.setEmail(req.getClbEmail());
-			club.setCp(req.getClbCp());
-			club.setCity(req.getClbCity());
-			club.setPhoto(req.getClbPhoto());
-			club.setActive(true);
-			club.setUpdatedBy(actualUserId);
-			club.setRequest(req);
-			Club clubGuardado = clubService.save(club);
-
-			// Crear relación Socios con rol manager
-			sociosService.createSocio(usuarioGuardado, clubGuardado, RolSocio.manager);
-
-			// Actualizar estado de la petición
-			requestService.updateEstado(req.getIdrequest(), EstadoRequest.accepted, actualUserId);
-
-			return ResponseEntity.ok(Map.of("status", "accepted", "message", "Club creado correctamente"));
-		} else {
-			// Rechazar petición
-			requestService.updateEstado(req.getIdrequest(), EstadoRequest.rejected, actualUserId);
-			return ResponseEntity.ok(Map.of("status", "rejected", "message", "Solicitud rechazada"));
-		}
-	}
-
-	/**
-	 * Procesa una petición de tipo PARTNER (alta de socio en club existente)
-	 * Puede ser procesada por un manager del club
-	 *
-	 * Casos:
-	 * 1. Usuario existe y activo → crear relación Socios
-	 * 2. Usuario existe pero inactivo (active=false) → reactivar y crear relación Socios
-	 * 3. Usuario no existe → crear nuevo usuario y crear relación Socios
-	 */
-	private ResponseEntity<Map<String, String>> procesarPeticionPartner(Request req, boolean accept, int actualUserId) {
-		if (accept) {
-			// Buscar el club por nombre
-			Club club = clubService.findByName(req.getClbTarget()).orElse(null);
-			if (club == null) {
-				return ResponseEntity.badRequest().body(Map.of("error", "El club especificado no existe"));
-			}
-
 			// Verificar si el usuario ya existe (por email o DNI)
 			Usuario usuario = usuarioService.findByEmail(req.getUsrEmail()).orElse(null);
 			if (usuario == null) {
@@ -278,7 +241,7 @@ public class ApiRequest {
 			}
 
 			if (usuario == null) {
-				// Caso 3: Usuario no existe → crear nuevo usuario
+				// Usuario nuevo: crear desde cero
 				usuario = new Usuario();
 				usuario.setDni(req.getUsrDni());
 				usuario.setName(req.getUsrName());
@@ -294,21 +257,92 @@ public class ApiRequest {
 				usuario.setRequest(req);
 				usuario = usuarioService.save(usuario);
 			} else if (!usuario.isActive()) {
-				// Caso 2: Usuario existe pero inactivo → reactivar
+				// Usuario existente inactivo: reactivar
+				usuario.setActive(true);
+				usuario.setName(req.getUsrName());
+				usuario.setSurname(req.getUsrSurname());
+				usuario.setPhone(req.getUsrPhone());
+				usuario.setCp(req.getUsrCp());
+				usuario.setCity(req.getUsrCity());
+				if (req.getUsrBorned() != null) {
+					usuario.setBorned(req.getUsrBorned());
+				}
 				usuario.setUpdatedBy(actualUserId);
-				usuario = usuarioService.reactivar(usuario);
+				usuario = usuarioService.save(usuario);
 			}
-			// Caso 1: Usuario existe y activo → no hacer nada, usar usuario existente
+			// Si el usuario ya existe y está activo, se usa tal cual
 
-			// Crear relación Socios con rol partner
+			Club club = new Club();
+			club.setName(req.getClbTarget());
+			club.setDescription(req.getClbDescription());
+			club.setSport(req.getClbSport());
+			club.setEmail(req.getClbEmail());
+			club.setCp(req.getClbCp());
+			club.setCity(req.getClbCity());
+			club.setPhoto(req.getClbPhoto());
+			club.setActive(true);
+			club.setUpdatedBy(actualUserId);
+			club.setRequest(req);
+			Club clubGuardado = clubService.save(club);
+
+			sociosService.createSocio(usuario, clubGuardado, RolSocio.manager);
+
+			requestService.updateEstado(req.getIdrequest(), EstadoRequest.accepted, actualUserId);
+
+			return ResponseEntity.ok(Map.of("status", "accepted", "message", "Club creado correctamente"));
+		} else {
+			requestService.updateEstado(req.getIdrequest(), EstadoRequest.rejected, actualUserId);
+			return ResponseEntity.ok(Map.of("status", "rejected", "message", "Solicitud rechazada"));
+		}
+	}
+
+	private ResponseEntity<Map<String, String>> procesarPeticionPartner(Request req, boolean accept, int actualUserId) {
+		if (accept) {
+			Club club = clubService.findByName(req.getClbTarget()).orElse(null);
+			if (club == null) {
+				return ResponseEntity.badRequest().body(Map.of("error", "El club especificado no existe"));
+			}
+
+			Usuario usuario = usuarioService.findByEmail(req.getUsrEmail()).orElse(null);
+			if (usuario == null) {
+				usuario = usuarioService.findByDni(req.getUsrDni()).orElse(null);
+			}
+
+			if (usuario == null) {
+				usuario = new Usuario();
+				usuario.setDni(req.getUsrDni());
+				usuario.setName(req.getUsrName());
+				usuario.setSurname(req.getUsrSurname());
+				usuario.setEmail(req.getUsrEmail());
+				usuario.setPasswd("{noop}" + req.getUsrPasswd());
+				usuario.setCp(req.getUsrCp());
+				usuario.setCity(req.getUsrCity());
+				usuario.setBorned(req.getUsrBorned());
+				usuario.setPhone(req.getUsrPhone());
+				usuario.setPhoto(req.getUsrPhoto());
+				usuario.setUpdatedBy(actualUserId);
+				usuario.setRequest(req);
+				usuario = usuarioService.save(usuario);
+			} else if (!usuario.isActive()) {
+				usuario.setActive(true);
+				usuario.setName(req.getUsrName());
+				usuario.setSurname(req.getUsrSurname());
+				usuario.setPhone(req.getUsrPhone());
+				usuario.setCp(req.getUsrCp());
+				usuario.setCity(req.getUsrCity());
+				if (req.getUsrBorned() != null) {
+					usuario.setBorned(req.getUsrBorned());
+				}
+				usuario.setUpdatedBy(actualUserId);
+				usuario = usuarioService.save(usuario);
+			}
+
 			sociosService.createSocio(usuario, club, RolSocio.partner);
 
-			// Actualizar estado de la petición
 			requestService.updateEstado(req.getIdrequest(), EstadoRequest.accepted, actualUserId);
 
 			return ResponseEntity.ok(Map.of("status", "accepted", "message", "Socio añadido correctamente al club"));
 		} else {
-			// Rechazar petición
 			requestService.updateEstado(req.getIdrequest(), EstadoRequest.rejected, actualUserId);
 			return ResponseEntity.ok(Map.of("status", "rejected", "message", "Solicitud rechazada"));
 		}

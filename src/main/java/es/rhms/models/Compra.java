@@ -61,7 +61,7 @@ public class Compra {
 	private Integer updatedBy;
 
 	public enum EstadoCompra {
-		reserved, paid, collected
+		reserved, paid, collected, cancelled
 	}
 
 }

@@ -160,7 +160,7 @@ CREATE TABLE compra (
     Producto_idproducto INT UNSIGNED NOT NULL,													-- otra FK
     cantidad INT NOT NULL,
     total DECIMAL(10,2) NOT NULL,
-    estado ENUM('reserved', 'paid', 'collected') NOT NULL DEFAULT 'reserved',      				-- por ahora solo implementado el estado reserved (MVP)
+    estado ENUM('reserved', 'paid', 'collected', 'cancelled') NOT NULL DEFAULT 'reserved',  -- estados: pendiente, pagado, entregado, cancelado
     aud_created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     aud_updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,										
     aud_updated_by INT UNSIGNED NULL DEFAULT NULL												-- actualizar desde trigger

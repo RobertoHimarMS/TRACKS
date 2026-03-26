@@ -10,6 +10,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title th:text="${club.name}">TrackYours • Club</title>
 
+    <!-- CSRF para peticiones AJAX -->
+    <meta name="_csrf" th:content="${_csrf?.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf?.headerName}"/>
+
     <!-- CSS y iconos externos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
                             integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
@@ -40,7 +44,7 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-lg-1">
                     <li class="nav-item"><a class="nav-link" th:href="@{/}"><i class="fa-solid fa-house me-1"></i> Inicio</a></li>
                     <li class="nav-item"><a class="nav-link active" th:href="${session.userlogged == null} ? @{/} : (${session.rollogged == 'admin'} ? @{/admin} : @{/club/{id}(id=${session.clublogged.idclub})})"><i class="fa-solid fa-users me-1"></i> Mi Club</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/carne}"><i class="fa-solid fa-id-card me-1"></i> Mi Carné</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="${session.userlogged == null} ? @{/} : @{/club/partner/{id}(id=${session.userlogged.iduser})}"><i class="fa-solid fa-id-card me-1"></i> Mi Carné</a></li>
                     <li class="nav-item"><a class="nav-link" th:href="@{/club#tienda}"><i class="fa-solid fa-store me-1"></i> Tienda</a></li>
                     <li class="nav-item"><a class="nav-link" th:href="@{/home#contacto}"><i class="fa-solid fa-envelope me-1"></i> Contacto</a></li>
                 </ul>
@@ -69,14 +73,27 @@
         </div>
     </nav>
 
-    <!-- Mensaje de éxito/error -->
-    <div class="container mt-3" th:if="${param.mensaje != null}">
-        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${param.mensaje[0] == 'ok'}">
-            <i class="fa-solid fa-circle-check me-2"></i> ¡Solicitud enviada correctamente! Te contactaremos pronto.
+    <!-- Sistema de mensajes unificado (política de reemplazo) -->
+    <div id="mensajeContainer" class="container mt-3">
+        <!-- Éxito: Solicitud enviada correctamente -->
+        <div class="alert alert-success alert-dismissible fade show" role="alert"
+             th:if="${param.mensaje != null and param.mensaje[0] == 'ok'}">
+            <i class="fa-solid fa-circle-check me-2"></i>
+            <strong>¡Solicitud enviada!</strong> Te contactaremos pronto.
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
         </div>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${param.mensaje[0] == 'ko'}">
-            <i class="fa-solid fa-circle-exclamation me-2"></i> Error al enviar la solicitud. Por favor, inténtalo de nuevo.
+        <!-- Error genérico -->
+        <div class="alert alert-danger alert-dismissible fade show" role="alert"
+             th:if="${param.mensaje != null and param.mensaje[0] == 'ko'}">
+            <i class="fa-solid fa-circle-exclamation me-2"></i>
+            <strong>Error al enviar la solicitud.</strong> Por favor, inténtalo de nuevo.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+        <!-- Solicitud duplicada -->
+        <div class="alert alert-warning alert-dismissible fade show" role="alert"
+             th:if="${param.mensaje != null and param.mensaje[0] == 'duplicate'}">
+            <i class="fa-solid fa-triangle-exclamation me-2"></i>
+            <strong>Ya tienes una solicitud pendiente</strong> para este club. Espera a que sea procesada.
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
         </div>
     </div>
@@ -104,20 +121,15 @@
                         <span th:text="${club.city}">Ciudad</span>
                     </p>
                     <div class="d-flex flex-wrap gap-2">
-                        <!-- Botón Hazte socio: visible si NO es socio del club y NO es admin -->
-                        <a class="btn btn-join" th:href="@{/club/newuser/{idclub}(idclub=${club.idclub})}"
-                           th:if="${!yaEsSocio and (session.userlogged == null or session.rollogged != 'admin')}">
+                        <!-- Botón Hazte socio: visible si NO está logueado O (está logueado pero NO es socio de este club y NO es admin) -->
+                        <a class="btn btn-join" th:href="@{/newpartner/{idclub}(idclub=${club.idclub})}"
+                           th:if="${session.userlogged == null or (session.rollogged != 'admin' and !esSocio)}">
                             <i class="fa-solid fa-user-plus me-2"></i> Hazte socio
                         </a>
                         <!-- Botón Gestionar Socios: visible solo si manager logueado en este club -->
                         <a class="btn btn-manage" th:href="@{/club/admin/{id}(id=${session.clublogged.idclub})}"
                            th:if="${session.clublogged != null and session.clublogged.idclub == club.idclub and session.rollogged == 'manager'}">
                             <i class="fa-solid fa-users-gear me-2"></i> Gestionar Socios
-                        </a>
-                        <!-- Botón Darse de baja: visible si ya es socio de este club -->
-                        <a class="btn btn-leave" href="#"
-                           th:if="${yaEsSocio}">
-                            <i class="fa-solid fa-xmark me-2"></i> Darse de baja
                         </a>
                     </div>
                 </div>
@@ -133,9 +145,17 @@
                     <h2 class="h3 mb-1"><i class="fa-solid fa-person-running me-2"></i>Actividades</h2>
                     <p class="text-body-secondary mb-0">Calendario de actividades y eventos del club.</p>
                 </div>
-                <a class="btn btn-new" th:href="@{/item/nuevo(tipo='actividad')}">
+                <a class="btn btn-new" th:href="@{/club/newactivity/{id}(id=${club.idclub})}"
+                   th:if="${session.clublogged != null and session.clublogged.idclub == club.idclub and session.rollogged == 'manager'}">
                     <i class="fa-solid fa-plus me-1"></i> Nueva actividad
                 </a>
+            </div>
+
+            <!-- Contenedor de mensajes para la sección Actividades -->
+            <div th:if="${mensajeActivity}" class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+                <i class="fa-solid fa-circle-check me-2"></i>
+                <span th:text="${mensajeActivity}">Mensaje</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
             </div>
 
             <!-- Slider de actividades -->
@@ -168,27 +188,38 @@
                                         <span th:if="${actividad.distancia != null and actividad.distancia > 0}" th:text="' · ' + ${actividad.distancia} + ' km'">Distancia</span>
                                     </p>
                                 </div>
-                                <div class="card-footer d-flex gap-2 justify-content-end">
-                                    <button class="btn action-btn view-btn" type="button"
-                                            data-bs-toggle="modal" data-bs-target="#actividadModal"
-                                            th:data-actividad-id="${actividad.idactividad}"
-                                            th:data-actividad-title="${actividad.title}"
-                                            th:data-actividad-desc="${actividad.description}"
-                                            th:data-actividad-sport="${actividad.sport}"
-                                            th:data-actividad-fecha="${actividad.fechaFormateada}"
-                                            th:data-actividad-place="${actividad.place}"
-                                            th:data-actividad-dist="${actividad.distancia}">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </button>
-                                    <button class="btn action-btn check-btn" type="button" th:data-actividad-id="${actividad.idactividad}">
-                                        <i class="fa-solid fa-circle-check"></i>
-                                    </button>
-                                    <a class="btn action-btn edit-btn" th:href="@{/actividad/editar/{id}(id=${actividad.idactividad})}">
-                                        <i class="fa-solid fa-pen"></i>
-                                    </a>
-                                    <button class="btn action-btn delete-btn" type="button" th:data-actividad-id="${actividad.idactividad}">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
+                                <div class="card-footer d-flex justify-content-between align-items-center">
+                                    <!-- Izquierda: Toggle de inscripción -->
+                                    <div>
+                                        <label class="toggle-switch"
+                                               th:if="${session.userlogged != null and session.clublogged != null and session.clublogged.idclub == club.idclub and session.rollogged != 'admin'}"
+                                               th:title="${actividadesInscritas.contains(actividad.idactividad)} ? 'Desinscribirse' : 'Inscribirse'">
+                                            <input type="checkbox" th:data-actividad-id="${actividad.idactividad}" th:checked="${actividadesInscritas.contains(actividad.idactividad)}">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    <!-- Derecha: Botones de acción -->
+                                    <div class="d-flex gap-2">
+                                        <button class="btn action-btn view-btn" type="button" title="Ver detalle"
+                                                data-bs-toggle="modal" data-bs-target="#actividadModal"
+                                                th:data-actividad-id="${actividad.idactividad}"
+                                                th:data-actividad-title="${actividad.title}"
+                                                th:data-actividad-desc="${actividad.description}"
+                                                th:data-actividad-sport="${actividad.sport}"
+                                                th:data-actividad-fecha="${actividad.fechaFormateada}"
+                                                th:data-actividad-place="${actividad.place}"
+                                                th:data-actividad-dist="${actividad.distancia}">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </button>
+                                        <a class="btn action-btn edit-btn" th:href="@{/club/editactivity/{id}(id=${actividad.idactividad})}"
+                                           th:if="${session.clublogged != null and session.clublogged.idclub == club.idclub and session.rollogged == 'manager'}">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </a>
+                                        <button class="btn action-btn delete-btn" type="button" th:data-delete-actividad="${actividad.idactividad}"
+                                                th:if="${session.clublogged != null and session.clublogged.idclub == club.idclub and session.rollogged == 'manager'}">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -219,9 +250,17 @@
                     <h2 class="h3 mb-1"><i class="fa-solid fa-clipboard-list me-2"></i>Publicaciones</h2>
                     <p class="text-body-secondary mb-0">Noticias y avisos para los socios del club.</p>
                 </div>
-                <a class="btn btn-new" th:href="@{/item/nuevo(tipo='publicacion')}">
+                <a class="btn btn-new" th:href="@{/club/newpublish/{id}(id=${club.idclub})}"
+                   th:if="${session.clublogged != null and session.clublogged.idclub == club.idclub and session.rollogged == 'manager'}">
                     <i class="fa-solid fa-plus me-1"></i> Nueva publicación
                 </a>
+            </div>
+
+            <!-- Contenedor de mensajes para la sección Publicaciones -->
+            <div th:if="${mensajePublish}" class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+                <i class="fa-solid fa-circle-check me-2"></i>
+                <span th:text="${mensajePublish}">Mensaje</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
             </div>
 
             <!-- Slider de publicaciones -->
@@ -252,17 +291,19 @@
                                     <p class="card-text text-body-secondary small mb-0" th:text="${#strings.abbreviate(publicacion.text, 50)}">Texto...</p>
                                 </div>
                                 <div class="card-footer d-flex gap-2 justify-content-end">
-                                    <button class="btn action-btn view-btn" type="button"
+                                    <button class="btn action-btn view-btn" type="button" title="Ver detalle"
                                             data-bs-toggle="modal" data-bs-target="#publicacionModal"
                                             th:data-publicacion-id="${publicacion.idpublicacion}"
                                             th:data-publicacion-subject="${publicacion.subject}"
                                             th:data-publicacion-text="${publicacion.text}">
                                         <i class="fa-solid fa-eye"></i>
                                     </button>
-                                    <a class="btn action-btn edit-btn" th:href="@{/publicacion/editar/{id}(id=${publicacion.idpublicacion})}">
+                                    <a class="btn action-btn edit-btn" th:href="@{/club/editpublish/{id}(id=${publicacion.idpublicacion})}"
+                                       th:if="${session.clublogged != null and session.clublogged.idclub == club.idclub and session.rollogged == 'manager'}">
                                         <i class="fa-solid fa-pen"></i>
                                     </a>
-                                    <button class="btn action-btn delete-btn" type="button" th:data-publicacion-id="${publicacion.idpublicacion}">
+                                    <button class="btn action-btn delete-btn" type="button" th:data-delete-publicacion="${publicacion.idpublicacion}"
+                                            th:if="${session.clublogged != null and session.clublogged.idclub == club.idclub and session.rollogged == 'manager'}">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
                                 </div>
@@ -295,9 +336,17 @@
                     <h2 class="h3 mb-1"><i class="fa-solid fa-store me-2"></i>Tienda</h2>
                     <p class="text-body-secondary mb-0">Productos y merchandising del club.</p>
                 </div>
-                <a class="btn btn-new" th:href="@{/item/nuevo(tipo='producto')}">
+                <a class="btn btn-new" th:href="@{/club/newproduct/{id}(id=${club.idclub})}"
+                   th:if="${session.clublogged != null and session.clublogged.idclub == club.idclub and session.rollogged == 'manager'}">
                     <i class="fa-solid fa-plus me-1"></i> Nuevo producto
                 </a>
+            </div>
+
+            <!-- Contenedor de mensajes para la sección Tienda -->
+            <div th:if="${mensajeProduct}" class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+                <i class="fa-solid fa-circle-check me-2"></i>
+                <span th:text="${mensajeProduct}">Mensaje</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
             </div>
 
             <!-- Slider de productos -->
@@ -329,26 +378,41 @@
                                         <span th:text="${#numbers.formatDecimal(producto.precio, 1, 2)} + ' €'">0,00 €</span>
                                     </p>
                                 </div>
-                                <div class="card-footer d-flex gap-2 justify-content-end">
-                                    <button class="btn action-btn view-btn" type="button"
-                                            data-bs-toggle="modal" data-bs-target="#productoModal"
-                                            th:data-producto-id="${producto.idproducto}"
-                                            th:data-producto-name="${producto.name}"
-                                            th:data-producto-desc="${producto.description}"
-                                            th:data-producto-precio="${#numbers.formatDecimal(producto.precio, 1, 2)}"
-                                            th:data-producto-stock="${producto.stock}"
-                                            th:data-producto-photo="${producto.photo}">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </button>
-                                    <button class="btn action-btn check-btn" type="button" th:data-producto-id="${producto.idproducto}">
-                                        <i class="fa-solid fa-cart-shopping"></i>
-                                    </button>
-                                    <a class="btn action-btn edit-btn" th:href="@{/producto/editar/{id}(id=${producto.idproducto})}">
-                                        <i class="fa-solid fa-pen"></i>
-                                    </a>
-                                    <button class="btn action-btn delete-btn" type="button" th:data-producto-id="${producto.idproducto}">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
+                                <div class="card-footer d-flex justify-content-between align-items-center">
+                                    <!-- Izquierda: Cantidad + Botón comprar -->
+                                    <div>
+                                        <div class="d-flex align-items-center gap-2"
+                                             th:if="${session.userlogged != null and session.clublogged != null and session.clublogged.idclub == club.idclub and session.rollogged != 'admin'}">
+                                            <label class="small text-body-secondary mb-0" th:for="'qty-' + ${producto.idproducto}">Ctd:</label>
+                                            <input type="number" class="qty-input"
+                                                   th:id="'qty-' + ${producto.idproducto}"
+                                                   min="0" max="${producto.stock}" value="0">
+                                            <button class="btn action-btn check-btn" type="button" th:data-producto-id="${producto.idproducto}">
+                                                <i class="fa-solid fa-cart-shopping"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <!-- Derecha: Botones de acción -->
+                                    <div class="d-flex gap-2">
+                                        <button class="btn action-btn view-btn" type="button" title="Ver detalle"
+                                                data-bs-toggle="modal" data-bs-target="#productoModal"
+                                                th:data-producto-id="${producto.idproducto}"
+                                                th:data-producto-name="${producto.name}"
+                                                th:data-producto-desc="${producto.description}"
+                                                th:data-producto-precio="${#numbers.formatDecimal(producto.precio, 1, 2)}"
+                                                th:data-producto-stock="${producto.stock}"
+                                                th:data-producto-photo="${producto.photo}">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </button>
+                                        <a class="btn action-btn edit-btn" th:href="@{/club/editproduct/{id}(id=${producto.idproducto})}"
+                                           th:if="${session.clublogged != null and session.clublogged.idclub == club.idclub and session.rollogged == 'manager'}">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </a>
+                                        <button class="btn action-btn delete-btn" type="button" th:data-delete-producto="${producto.idproducto}"
+                                                th:if="${session.clublogged != null and session.clublogged.idclub == club.idclub and session.rollogged == 'manager'}">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -368,6 +432,8 @@
                     <i class="fa-solid fa-chevron-right"></i>
                 </button>
             </div>
+            <!-- Contenedor de mensajes para la sección Tienda -->
+            <div id="mensajeContainerTienda" class="mt-3"></div>
         </div>
     </section>
 

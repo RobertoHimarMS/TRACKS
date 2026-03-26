@@ -322,8 +322,21 @@
        Carga los clubs del usuario vía AJAX cuando sale del email
        ═════════════════════════════════════════════════════════ */
 
+    const authModal = document.getElementById('authModal');
     const loginEmail = document.getElementById('loginEmail');
     const clubSelector = document.getElementById('clubSelector');
+
+    // --- Limpiar modal al abrirse ---
+    if (authModal) {
+        authModal.addEventListener('show.bs.modal', function() {
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.reset();
+            }
+            clubSelector.innerHTML = '<option value="">Introduce tu email para ver tus clubs</option>';
+            clubSelector.disabled = true;
+        });
+    }
 
     if (loginEmail) {
         loginEmail.addEventListener('blur', function() {
@@ -444,7 +457,7 @@
             const csrfToken = $('meta[name="_csrf"]').attr('content');
 
             $.ajax({
-                url: '/contacto',
+                url: '/api/ticket/new',
                 method: 'POST',
                 data: {
                     subject: subjectInput.value.trim(),
@@ -452,16 +465,14 @@
                     description: messageInput.value.trim(),
                     _csrf: csrfToken
                 },
-                success: function() {
-                    // Mostrar modal de éxito
-                    const modal = new bootstrap.Modal(document.getElementById('ticketSuccessModal'));
-                    modal.show();
-
+                success: function(response) {
+                    // Mostrar mensaje de éxito
+                    mostrarMensaje(response.message || 'Ticket enviado correctamente', 'success');
                     // Limpiar formulario
                     contactForm.reset();
                 },
                 error: function() {
-                    alert('Error al enviar el ticket. Inténtelo de nuevo más tarde.');
+                    mostrarMensaje('Error al enviar el ticket. Inténtelo de nuevo.', 'danger');
                 },
                 complete: function() {
                     submitBtn.disabled = false;
@@ -840,6 +851,505 @@
                             alert('Error al rechazar la solicitud. Inténtelo de nuevo.');
                         }
                     }
+                });
+            });
+        });
+    }
+
+    /* ═════════════════════════════════════════════════════════
+       SECCIÓN 8: MODAL DE BAJA DE CLUB
+       Confirmación antes de darse de baja
+       ═════════════════════════════════════════════════════════ */
+
+    const bajaModalEl = document.getElementById('bajaModal');
+
+    if (bajaModalEl) {
+        bajaModalEl.addEventListener('show.bs.modal', function(ev) {
+            const btn = ev.relatedTarget;
+            if (!btn) return;
+
+            // Obtener nombre del club
+            const clubName = btn.getAttribute('data-club-name') || 'este club';
+
+            // Actualizar mensaje
+            const mensajeEl = bajaModalEl.querySelector('#bajaMensaje');
+            if (mensajeEl) {
+                mensajeEl.textContent = '¿Confirma que se va a dar de baja en el club ' + clubName + '?';
+            }
+
+            // URL sin parámetros - usa datos de sesión del servidor
+            const confirmarBtn = bajaModalEl.querySelector('#bajaConfirmarBtn');
+            if (confirmarBtn) {
+                confirmarBtn.href = '/club/unsuscribe';
+            }
+        });
+    }
+
+    /* ═════════════════════════════════════════════════════════
+       SECCIÓN 9: MODAL DE DETALLE DE COMPRA (CARNÉ)
+       Población dinámica del modal de compra
+       ═════════════════════════════════════════════════════════ */
+
+    const compraModalEl = document.getElementById('compraModal');
+
+    if (compraModalEl) {
+        compraModalEl.addEventListener('show.bs.modal', function(ev) {
+            const btn = ev.relatedTarget;
+            if (!btn) return;
+
+            // Obtener datos del botón
+            const nombre = btn.getAttribute('data-compra-nombre') || '—';
+            const desc = btn.getAttribute('data-compra-desc') || '—';
+            const precio = btn.getAttribute('data-compra-precio') || '0,00';
+            const cant = btn.getAttribute('data-compra-cant') || '1';
+            const total = btn.getAttribute('data-compra-total') || '0,00';
+            const estado = btn.getAttribute('data-compra-estado') || 'reserved';
+
+            // Referencias a elementos
+            const nombreEls = compraModalEl.querySelectorAll('[data-compra-nombre]');
+            const descEl = compraModalEl.querySelector('[data-compra-desc]');
+            const precioEl = compraModalEl.querySelector('[data-compra-precio]');
+            const cantEl = compraModalEl.querySelector('[data-compra-cant]');
+            const totalEl = compraModalEl.querySelector('[data-compra-total]');
+            const estadoBadge = compraModalEl.querySelector('#compra-estado-badge');
+
+            // Actualizar contenido
+            nombreEls.forEach(el => el.textContent = nombre);
+            if (descEl) descEl.textContent = desc;
+            if (precioEl) precioEl.textContent = precio;
+            if (cantEl) cantEl.textContent = cant;
+            if (totalEl) totalEl.textContent = total;
+
+            // Actualizar badge de estado
+            if (estadoBadge) {
+                if (estado === 'reserved') {
+                    estadoBadge.textContent = 'Pendiente';
+                    estadoBadge.className = 'badge badge-status badge-warning';
+                } else if (estado === 'paid') {
+                    estadoBadge.textContent = 'Pagado';
+                    estadoBadge.className = 'badge badge-status badge-success';
+                } else if (estado === 'collected') {
+                    estadoBadge.textContent = 'Entregado';
+                    estadoBadge.className = 'badge badge-status badge-success';
+                }
+            }
+        });
+    }
+
+    /* ═════════════════════════════════════════════════════════
+       SECCIÓN 10: TOGGLE DE INSCRIPCIÓN A ACTIVIDADES
+       Maneja la inscripción/desinscripción mediante AJAX
+       ═════════════════════════════════════════════════════════ */
+
+    const toggleSwitches = document.querySelectorAll('.toggle-switch input[type="checkbox"][data-actividad-id]');
+
+    if (toggleSwitches.length > 0) {
+        // Obtener token CSRF de los meta tags
+        const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
+
+        toggleSwitches.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const actividadId = this.getAttribute('data-actividad-id');
+                const isChecked = this.checked;
+
+                // Determinar acción y URL
+                const action = isChecked ? 'suscribe' : 'unsuscribe';
+                const url = `/user/activity/${action}/${actividadId}`;
+
+                // Referencia al checkbox
+                const toggleInput = this;
+                const toggleLabel = this.closest('.toggle-switch');
+
+                // Preparar headers
+                const headers = {
+                    'X-Requested-With': 'XMLHttpRequest'
+                };
+                if (csrfToken && csrfHeader) {
+                    headers[csrfHeader] = csrfToken;
+                }
+
+                // Llamada AJAX
+                fetch(url, {
+                    method: 'POST',
+                    headers: headers
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && toggleLabel) {
+                        // Actualizar title
+                        toggleLabel.title = isChecked ? 'Desinscribirse' : 'Inscribirse';
+                    } else {
+                        // Revertir el cambio del checkbox si falla
+                        toggleInput.checked = !isChecked;
+                        console.error('Error:', data.error);
+                    }
+                })
+                .catch(error => {
+                    // Revertir el cambio del checkbox si falla
+                    toggleInput.checked = !isChecked;
+                    console.error('Error de conexión:', error);
+                });
+            });
+        });
+    }
+
+    /* ═════════════════════════════════════════════════════════
+       SECCIÓN 11: BOTÓN ELIMINAR INSCRIPCIÓN (CARNÉ)
+       Botón de aspa roja para desinscribirse en "Mis actividades"
+       ═════════════════════════════════════════════════════════ */
+
+    const deleteInscripcionBtns = document.querySelectorAll('.delete-btn[data-actividad-id]');
+
+    if (deleteInscripcionBtns.length > 0) {
+        // Obtener token CSRF de los meta tags
+        const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
+
+        deleteInscripcionBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const actividadId = this.getAttribute('data-actividad-id');
+                const url = `/user/activity/unsuscribe/${actividadId}`;
+                const row = this.closest('tr');
+
+                // Preparar headers
+                const headers = {
+                    'X-Requested-With': 'XMLHttpRequest'
+                };
+                if (csrfToken && csrfHeader) {
+                    headers[csrfHeader] = csrfToken;
+                }
+
+                // Llamada AJAX
+                fetch(url, {
+                    method: 'POST',
+                    headers: headers
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && row) {
+                        // Eliminar fila con transición
+                        row.style.transition = 'opacity 0.3s ease';
+                        row.style.opacity = '0';
+                        setTimeout(() => {
+                            row.remove();
+                        }, 300);
+                    } else {
+                        console.error('Error:', data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error de conexión:', error);
+                });
+            });
+        });
+    }
+
+    /**
+     * Muestra un mensaje dinámico en el contenedor superior
+     * @param {string} mensaje - Texto del mensaje
+     * @param {string} tipo - 'success', 'danger', 'warning'
+     */
+    function mostrarMensaje(mensaje, tipo) {
+        const container = document.getElementById('mensajeContainer');
+        if (!container) return;
+
+        // Limpiar mensajes anteriores
+        container.innerHTML = '';
+
+        // Crear alerta
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${tipo} alert-dismissible fade show`;
+        alertDiv.setAttribute('role', 'alert');
+
+        const icon = tipo === 'success' ? 'fa-circle-check' :
+                     tipo === 'danger' ? 'fa-circle-exclamation' : 'fa-triangle-exclamation';
+
+        alertDiv.innerHTML = `
+            <i class="fa-solid ${icon} me-2"></i>
+            <strong>${mensaje}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        `;
+
+        container.appendChild(alertDiv);
+
+        // Scroll al inicio para ver el mensaje
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* ═════════════════════════════════════════════════════════
+       SECCIÓN 12: COMPRA DE PRODUCTOS (TIENDA)
+       Botón de carrito para reservar productos
+       ═════════════════════════════════════════════════════════ */
+
+    const comprarBtns = document.querySelectorAll('.check-btn[data-producto-id]');
+
+    if (comprarBtns.length > 0) {
+        // Obtener token CSRF de los meta tags
+        const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
+
+        comprarBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const productoId = this.getAttribute('data-producto-id');
+                const qtyInput = document.getElementById('qty-' + productoId);
+                const cantidad = parseInt(qtyInput?.value || 0, 10);
+
+                // Verificar cantidad válida
+                if (cantidad <= 0) {
+                    mostrarMensajeTienda('La cantidad debe ser mayor que 0', 'warning');
+                    return;
+                }
+
+                // Preparar headers
+                const headers = {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-Requested-With': 'XMLHttpRequest'
+                };
+                if (csrfToken && csrfHeader) {
+                    headers[csrfHeader] = csrfToken;
+                }
+
+                // Llamada AJAX
+                fetch(`/user/product/reserve/${productoId}?cantidad=${cantidad}`, {
+                    method: 'POST',
+                    headers: headers
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        mostrarMensajeTienda(data.message, 'success');
+                        // Resetear input de cantidad
+                        if (qtyInput) qtyInput.value = 0;
+                    } else {
+                        mostrarMensajeTienda(data.error, 'danger');
+                    }
+                })
+                .catch(error => {
+                    mostrarMensajeTienda('Error de conexión', 'danger');
+                    console.error('Error:', error);
+                });
+            });
+        });
+    }
+
+    /**
+     * Muestra un mensaje dinámico en el contenedor de la sección Tienda
+     * @param {string} mensaje - Texto del mensaje
+     * @param {string} tipo - 'success', 'danger', 'warning'
+     */
+    function mostrarMensajeTienda(mensaje, tipo) {
+        const container = document.getElementById('mensajeContainerTienda');
+        if (!container) return;
+
+        // Limpiar mensajes anteriores
+        container.innerHTML = '';
+
+        // Crear alerta
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${tipo} alert-dismissible fade show`;
+        alertDiv.setAttribute('role', 'alert');
+
+        const icon = tipo === 'success' ? 'fa-circle-check' :
+                     tipo === 'danger' ? 'fa-circle-exclamation' : 'fa-triangle-exclamation';
+
+        alertDiv.innerHTML = `
+            <i class="fa-solid ${icon} me-2"></i>
+            <strong>${mensaje}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        `;
+
+        container.appendChild(alertDiv);
+    }
+
+    /* ═════════════════════════════════════════════════════════
+       SECCIÓN 13: CANCELAR COMPRA (CARNÉ)
+       Botón de aspa roja para cancelar compras pendientes
+       ═════════════════════════════════════════════════════════ */
+
+    const cancelarCompraBtns = document.querySelectorAll('.delete-btn[data-compra-id]');
+
+    if (cancelarCompraBtns.length > 0) {
+        // Obtener token CSRF de los meta tags
+        const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
+
+        cancelarCompraBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const compraId = this.getAttribute('data-compra-id');
+                const row = this.closest('tr');
+
+                // Preparar headers
+                const headers = {
+                    'X-Requested-With': 'XMLHttpRequest'
+                };
+                if (csrfToken && csrfHeader) {
+                    headers[csrfHeader] = csrfToken;
+                }
+
+                // Llamada AJAX
+                fetch(`/user/product/cancel/${compraId}`, {
+                    method: 'POST',
+                    headers: headers
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Actualizar badge de estado
+                        const badge = row.querySelector('.badge-status');
+                        if (badge) {
+                            badge.className = 'badge badge-status badge-danger';
+                            badge.textContent = 'Cancelado';
+                        }
+                        // Ocultar botón cancelar
+                        btn.style.display = 'none';
+                    } else {
+                        console.error('Error:', data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error de conexión:', error);
+                });
+            });
+        });
+    }
+
+    /* ═════════════════════════════════════════════════════════
+       SECCIÓN 14: ELIMINAR ACTIVIDAD (CLUB)
+       Botón de papelera para eliminar actividades del club
+       ═════════════════════════════════════════════════════════ */
+
+    const deleteActividadBtns = document.querySelectorAll('.delete-btn[data-delete-actividad]');
+
+    if (deleteActividadBtns.length > 0) {
+        // Obtener token CSRF de los meta tags
+        const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
+
+        deleteActividadBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const actividadId = this.getAttribute('data-delete-actividad');
+                const url = `/api/activity/delete/${actividadId}`;
+
+                // Confirmar antes de eliminar
+                if (!confirm('¿Estás seguro de que quieres eliminar esta actividad?')) {
+                    return;
+                }
+
+                // Preparar headers
+                const headers = {
+                    'X-Requested-With': 'XMLHttpRequest'
+                };
+                if (csrfToken && csrfHeader) {
+                    headers[csrfHeader] = csrfToken;
+                }
+
+                // Llamada AJAX
+                fetch(url, {
+                    method: 'POST',
+                    headers: headers
+                })
+                .then(response => {
+                    // Como devuelve RedirectView, recargamos la página
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error('Error de conexión:', error);
+                    mostrarMensaje('Error al eliminar la actividad', 'danger');
+                });
+            });
+        });
+    }
+
+    /* ═════════════════════════════════════════════════════════
+       SECCIÓN 15: ELIMINAR PUBLICACIÓN (CLUB)
+       Botón de papelera para eliminar publicaciones del club
+       ═════════════════════════════════════════════════════════ */
+
+    const deletePublicacionBtns = document.querySelectorAll('.delete-btn[data-delete-publicacion]');
+
+    if (deletePublicacionBtns.length > 0) {
+        // Obtener token CSRF de los meta tags
+        const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
+
+        deletePublicacionBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const publicacionId = this.getAttribute('data-delete-publicacion');
+                const url = `/api/publish/delete/${publicacionId}`;
+
+                // Confirmar antes de eliminar
+                if (!confirm('¿Estás seguro de que quieres eliminar esta publicación?')) {
+                    return;
+                }
+
+                // Preparar headers
+                const headers = {
+                    'X-Requested-With': 'XMLHttpRequest'
+                };
+                if (csrfToken && csrfHeader) {
+                    headers[csrfHeader] = csrfToken;
+                }
+
+                // Llamada AJAX
+                fetch(url, {
+                    method: 'POST',
+                    headers: headers
+                })
+                .then(response => {
+                    // Como devuelve RedirectView, recargamos la página
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error('Error de conexión:', error);
+                    mostrarMensaje('Error al eliminar la publicación', 'danger');
+                });
+            });
+        });
+    }
+
+    /* ═════════════════════════════════════════════════════════
+       SECCIÓN 16: ELIMINAR PRODUCTO (CLUB)
+       Botón de papelera para eliminar productos del club (soft delete)
+       ═════════════════════════════════════════════════════════ */
+
+    const deleteProductoBtns = document.querySelectorAll('.delete-btn[data-delete-producto]');
+
+    if (deleteProductoBtns.length > 0) {
+        // Obtener token CSRF de los meta tags
+        const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
+
+        deleteProductoBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const productoId = this.getAttribute('data-delete-producto');
+                const url = `/api/product/delete/${productoId}`;
+
+                // Confirmar antes de eliminar
+                if (!confirm('¿Estás seguro de que quieres eliminar este producto?')) {
+                    return;
+                }
+
+                // Preparar headers
+                const headers = {
+                    'X-Requested-With': 'XMLHttpRequest'
+                };
+                if (csrfToken && csrfHeader) {
+                    headers[csrfHeader] = csrfToken;
+                }
+
+                // Llamada AJAX
+                fetch(url, {
+                    method: 'POST',
+                    headers: headers
+                })
+                .then(response => {
+                    // Como devuelve RedirectView, recargamos la página
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error('Error de conexión:', error);
+                    mostrarMensaje('Error al eliminar el producto', 'danger');
                 });
             });
         });

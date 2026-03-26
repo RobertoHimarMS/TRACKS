@@ -32,4 +32,10 @@ public interface RequestRepository extends JpaRepository<Request, Integer> {
 	 */
 	List<Request> findByTipoAndClbTargetAndEstadoNotOrderByCreatedAtDesc(TipoRequest tipo, String clbTarget, EstadoRequest estado);
 
+	/**
+	 * Busca una petición PARTNER pendiente para un email y club específicos
+	 * @return Optional con la petición si existe
+	 */
+	Request findByTipoAndUsrEmailAndClbTargetAndEstado(TipoRequest tipo, String usrEmail, String clbTarget, EstadoRequest estado);
+
 }

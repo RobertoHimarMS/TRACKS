@@ -438,6 +438,88 @@ h2 i, h3 i, h4 i, h5 i, h6 i {
     transform: translate(-1px, -1px);
 }
 
+/* --- Toggle tipo switch (inscripción a actividades) --- */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.toggle-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    border-radius: 24px;
+    transition: 0.3s ease;
+    border: 1px solid #ddd;
+}
+
+.toggle-slider::before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background-color: var(--ty-green-brand);
+    border-color: var(--ty-green-brand);
+}
+
+.toggle-switch input:checked + .toggle-slider::before {
+    transform: translateX(20px);
+}
+
+.toggle-switch:hover .toggle-slider {
+    box-shadow: 0 0 0 2px rgba(188, 227, 59, 0.3);
+}
+
+/* --- Input de cantidad para productos --- */
+.qty-input {
+    text-align: center;
+    padding: 0.125rem 0.25rem;
+    font-size: 0.75rem;
+    width: 50px;
+    border: 1px solid var(--ty-green-border);
+    border-radius: var(--ty-radius-sm);
+    background: var(--ty-white-bg);
+    color: var(--ty-text-color);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.qty-input:focus {
+    outline: none;
+    border-color: var(--ty-green-brand);
+    box-shadow: 0 0 0 2px rgba(188, 227, 59, 0.25);
+}
+
+/* Spinner más compacto */
+.qty-input::-webkit-outer-spin-button,
+.qty-input::-webkit-inner-spin-button {
+    opacity: 1;
+    height: 14px;
+    margin: 0;
+}
+
 /* --- Botón de creación (naranja) --- */
 .btn-new {
     background: rgba(245, 158, 11, 0.15);

@@ -33,11 +33,25 @@ public class ProductoService {
 	}
 
 	/**
-	 * Elimina un producto por su ID
-	 * @param idproducto ID del producto a eliminar
+	 * Busca un producto por su ID
+	 * @param idproducto ID del producto
+	 * @return El producto o null si no existe
 	 */
-	public void deleteById(int idproducto) {
-		productoRepository.deleteById(idproducto);
+	public Producto findById(int idproducto) {
+		return productoRepository.findById(idproducto).orElse(null);
+	}
+
+	/**
+	 * Marca un producto como eliminado poniendo stock = -1
+	 * (soft delete para mantener integridad con tabla Compra)
+	 * @param idproducto ID del producto a marcar como eliminado
+	 */
+	public void softDeleteById(int idproducto) {
+		Producto producto = productoRepository.findById(idproducto).orElse(null);
+		if (producto != null) {
+			producto.setStock(-1);
+			productoRepository.save(producto);
+		}
 	}
 
 }

@@ -8,16 +8,33 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import es.rhms.connections.MySqlConnection;
 import es.rhms.models.Club;
+import es.rhms.repositories.ActividadRepository;
 import es.rhms.repositories.ClubRepository;
+import es.rhms.repositories.ProductoRepository;
+import es.rhms.repositories.PublicacionRepository;
+import es.rhms.repositories.SociosRepository;
 
 @Service
 public class ClubService {
 
 	@Autowired
 	private ClubRepository clubRepository;
+
+	@Autowired
+	private SociosRepository sociosRepository;
+
+	@Autowired
+	private ActividadRepository actividadRepository;
+
+	@Autowired
+	private PublicacionRepository publicacionRepository;
+
+	@Autowired
+	private ProductoRepository productoRepository;
 
 	private static final int SYSTEM_CLUB_ID = 1;							/* ID del club "System" - reservado para administración */
 
@@ -156,6 +173,51 @@ public class ClubService {
 	 */
 	public Optional<Club> findByName(String name) {
 		return clubRepository.findByName(name);
+	}
+
+	/**
+	 * Da de baja un club completamente (soft delete)
+	 * - Marca el club como inactivo (active = false)
+	 * - Actualiza el auditor (updatedBy)
+	 * - Da de baja a todos los socios del club
+	 * - Elimina las inscripciones de actividades
+	 * - Elimina las actividades del club
+	 * - Elimina las publicaciones del club
+	 * - Marca los productos como dados de baja (stock = -1)
+	 *
+	 * @param idclub ID del club a dar de baja
+	 * @param idmanager ID del usuario que realiza la acción (auditoría)
+	 * @return true si se dio de baja correctamente, false si el club no existe o ya estaba inactivo
+	 */
+	@Transactional
+	public boolean deleteClub(int idclub, int idmanager) {
+		// 1. Buscar el club
+		Club club = clubRepository.findById(idclub).orElse(null);
+		if (club == null || !club.isActive()) {
+			return false;
+		}
+
+		// 2. Marcar club como inactivo y actualizar auditoría
+		club.setActive(false);
+		club.setUpdatedBy(idmanager);
+		clubRepository.save(club);
+
+		// 3. Dar de baja a todos los socios del club
+		sociosRepository.unsubscribeAllByClubId(idclub);
+
+		// 4. Eliminar inscripciones de actividades (tabla intermedia)
+		actividadRepository.deleteInscripcionesByClubId(idclub);
+
+		// 5. Eliminar actividades del club
+		actividadRepository.deleteByClub_Idclub(idclub);
+
+		// 6. Eliminar publicaciones del club
+		publicacionRepository.deleteByClub_Idclub(idclub);
+
+		// 7. Marcar productos como dados de baja (stock = -1)
+		productoRepository.markAsDeletedByClubId(idclub);
+
+		return true;
 	}
 
 }

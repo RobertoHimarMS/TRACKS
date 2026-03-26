@@ -15,4 +15,6 @@ public interface PublicacionRepository extends JpaRepository<Publicacion, Intege
 	@Query("SELECT p FROM Publicacion p JOIN FETCH p.club c WHERE c.idclub = :idclub ORDER BY p.idpublicacion DESC")
 	List<Publicacion> findByClubId(@Param("idclub") int idclub);
 
+	void deleteByClub_Idclub(int idclub);
+
 }

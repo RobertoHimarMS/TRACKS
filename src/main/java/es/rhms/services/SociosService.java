@@ -11,6 +11,7 @@ import es.rhms.models.Club;
 import es.rhms.models.Socios;
 import es.rhms.models.Socios.RolSocio;
 import es.rhms.models.Usuario;
+import es.rhms.repositories.ActividadRepository;
 import es.rhms.repositories.SociosRepository;
 import es.rhms.repositories.UsuarioRepository;
 
@@ -23,6 +24,12 @@ public class SociosService {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+
+	@Autowired
+	private ClubService clubService;
+
+	@Autowired
+	private ActividadRepository actividadRepository;
 
 	/**
 	 * Obtiene los clubes donde un usuario es socio activo (no dado de baja)
@@ -109,6 +116,57 @@ public class SociosService {
 	@Transactional(readOnly = true)
 	public boolean isUserInClub(int userId, int clubId) {
 		return sociosRepository.existsByUsuarioIduserAndClubIdclubAndUnsuscribedAtIsNull(userId, clubId);
+	}
+
+	/**
+	 * Da de baja a un socio o manager de un club
+	 * - Si es manager: elimina el club completo (incluye socios, actividades, publicaciones, productos)
+	 * - Si es partner: da de baja al socio y elimina sus inscripciones en actividades del club
+	 * - En ambos casos: si el usuario no tiene más clubes activos, se desactiva
+	 *
+	 * @param userId ID del usuario
+	 * @param clubId ID del club
+	 * @return true si la baja fue exitosa, false si el usuario no existe o no está activo
+	 */
+	@Transactional
+	public boolean deletePartnerOrManager(int userId, int clubId) {
+		// 1. Verificar usuario activo
+		Usuario usuario = usuarioRepository.findById(userId).orElse(null);
+		if (usuario == null || !usuario.isActive()) {
+			return false;
+		}
+
+		// 2. Obtener rol del usuario en el club
+		String rol = findUserRoleInClub(userId, clubId);
+		if (rol == null) {
+			return false;
+		}
+
+		// 3. Flujos separados según rol
+		if ("manager".equals(rol)) {
+			// Manager: eliminar club (ya incluye baja de socios e inscripciones)
+			clubService.deleteClub(clubId, userId);
+
+			// Verificar si tiene otros clubes activos y desactivar usuario si corresponde
+			long clubesActivos = sociosRepository.countActiveByUserId(userId);
+			if (clubesActivos == 0) {
+				usuarioRepository.deactivateUser(userId);
+			}
+		} else {
+			// Partner: dar de baja al socio en este club
+			sociosRepository.unsubscribeUserFromClub(userId, clubId);
+
+			// Verificar si tiene otros clubes activos y desactivar usuario si corresponde
+			long clubesActivos = sociosRepository.countActiveByUserId(userId);
+			if (clubesActivos == 0) {
+				usuarioRepository.deactivateUser(userId);
+			}
+
+			// Eliminar inscripciones del usuario en actividades de este club
+			actividadRepository.deleteInscripcionesByUserAndClub(userId, clubId);
+		}
+
+		return true;
 	}
 
 }

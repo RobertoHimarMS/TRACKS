@@ -20,11 +20,15 @@ public class SecurityConfiguration {
 		http.authorizeHttpRequests((authorize) -> authorize
 													.requestMatchers("/", "/index", "/home").permitAll()
 													.requestMatchers("/css/**", "/js/**", "/imgs/**", "/icons/**").permitAll()
-													.requestMatchers("/api/**").permitAll()											/* permite acceder /api/misclubs */
+													.requestMatchers("/api/**").permitAll()											/* permite acceder /api/misclubs y /api/request/new */
 													.requestMatchers("/contacto").permitAll()										/* cualquier visitante o logueado puede enviar un ticket */
-													.requestMatchers("/club/newclub").permitAll()									/* cualquier visitante puede solicitar registro de club */
-													.requestMatchers("/club/newuser/{idclub}").permitAll()						/* cualquier visitante puede solicitar alta de socio */
+													.requestMatchers("/newclub").permitAll()										/* cualquier visitante puede solicitar registro de club */
+													.requestMatchers("/newpartner/**").permitAll()								/* cualquier visitante puede solicitar alta de socio */
 													.requestMatchers("/club/{id}").permitAll()										/* cualquier visitante puede ver detalle de club */
+													.requestMatchers("/club/newactivity/**", "/club/editactivity/**", "/api/activity/create", "/api/activity/update/**", "/api/activity/delete/**").hasRole("MANAGER")	/* solo managers pueden gestionar actividades */
+													.requestMatchers("/club/newpublish/**", "/club/editpublish/**", "/api/publish/create", "/api/publish/update/**", "/api/publish/delete/**").hasRole("MANAGER")	/* solo managers pueden gestionar publicaciones */
+													.requestMatchers("/club/newproduct/**", "/club/editproduct/**", "/api/product/create", "/api/product/update/**", "/api/product/delete/**").hasRole("MANAGER")	/* solo managers pueden gestionar productos */
+													.requestMatchers("/user/**").authenticated()									/* solo usuarios logueados pueden acceder a /user/** */
 													.anyRequest().authenticated())
 			.formLogin((form) -> form
 									.loginPage("/home")

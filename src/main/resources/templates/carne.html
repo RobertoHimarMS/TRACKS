@@ -10,6 +10,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>TrackYours • Mi Carné</title>
 
+    <!-- CSRF para peticiones AJAX -->
+    <meta name="_csrf" th:content="${_csrf?.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf?.headerName}"/>
+
     <!-- CSS y iconos externos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
                             integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
@@ -40,7 +44,7 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-lg-1">
                     <li class="nav-item"><a class="nav-link" th:href="@{/}"><i class="fa-solid fa-house me-1"></i> Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" th:href="${session.userlogged == null} ? @{/} : (${session.rollogged == 'admin'} ? @{/admin} : @{/club/{id}(id=${session.clublogged.idclub})})"><i class="fa-solid fa-users me-1"></i> Mi Club</a></li>
-                    <li class="nav-item"><a class="nav-link active" th:href="@{/carne}"><i class="fa-solid fa-id-card me-1"></i> Mi Carné</a></li>
+                    <li class="nav-item"><a class="nav-link active" th:href="${session.userlogged == null} ? @{/} : @{/club/partner/{id}(id=${session.userlogged.iduser})}"><i class="fa-solid fa-id-card me-1"></i> Mi Carné</a></li>
                     <li class="nav-item"><a class="nav-link" th:href="@{/club#tienda}"><i class="fa-solid fa-store me-1"></i> Tienda</a></li>
                     <li class="nav-item"><a class="nav-link" th:href="@{/home#contacto}"><i class="fa-solid fa-envelope me-1"></i> Contacto</a></li>
                 </ul>
@@ -75,40 +79,42 @@
             <div class="profile-card p-4 rounded-4">
                 <div class="row align-items-center g-4">
                     <div class="col-auto">
-                        <img th:src="@{/imgs/persons/enola.jpg}" class="profile-photo rounded-4" alt="Enola Jones">
+                        <img th:src="${usuario.photo != null} ? @{/imgs/persons/{photo}(photo=${usuario.photo})} : @{/imgs/persons/default.jpg}"
+                             class="profile-photo rounded-4" alt="Foto de perfil">
                     </div>
                     <div class="col">
-                        <h1 class="h3 mb-2"><i class="fa-solid fa-user me-2"></i>Enola Jones</h1>
+                        <h1 class="h3 mb-2"><i class="fa-solid fa-user me-2"></i><span th:text="${usuario.name + ' ' + usuario.surname}">Nombre Apellido</span></h1>
                         <div class="row g-3">
                             <div class="col-sm-6 col-lg-3">
                                 <div class="profile-info">
                                     <span class="profile-label"><i class="fa-solid fa-id-card me-1"></i> DNI</span>
-                                    <span class="profile-value">76543219B</span>
+                                    <span class="profile-value" th:text="${usuario.dni}">12345678A</span>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-lg-3">
                                 <div class="profile-info">
                                     <span class="profile-label"><i class="fa-solid fa-envelope me-1"></i> Email</span>
-                                    <span class="profile-value">enola.jones@trackyours.com</span>
+                                    <span class="profile-value" th:text="${usuario.email}">email@example.com</span>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-lg-3">
                                 <div class="profile-info">
                                     <span class="profile-label"><i class="fa-solid fa-users me-1"></i> Club</span>
-                                    <span class="profile-value">Club AA - Running</span>
+                                    <span class="profile-value" th:text="${club != null} ? ${club.name + ' - ' + club.sportName} : 'Sin club'">Club AA - Running</span>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-lg-3">
                                 <div class="profile-info">
                                     <span class="profile-label"><i class="fa-solid fa-calendar me-1"></i> Alta</span>
-                                    <span class="profile-value">15/01/2024</span>
+                                    <span class="profile-value" th:text="${#dates.format(fechaAlta, 'dd/MM/yyyy')}">01/01/2024</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-auto">
-                        <button class="btn action-btn delete-btn" title="Darse de baja">
-                            <i class="fa-solid fa-user-minus"></i>
+                        <button class="btn btn-leave" title="Darse de baja" data-bs-toggle="modal" data-bs-target="#bajaModal"
+                                th:data-club-name="${club != null} ? ${club.name} : 'este club'">
+                            <i class="fa-solid fa-user-minus me-1"></i> Darse de baja
                         </button>
                     </div>
                 </div>
@@ -126,7 +132,8 @@
                 </div>
             </div>
 
-            <div class="table-responsive">
+            <!-- Tabla de actividades dinámica -->
+            <div class="table-responsive" th:if="${!misActividades.isEmpty()}">
                 <table class="table table-hover align-middle mb-0">
                     <thead>
                         <tr>
@@ -137,61 +144,38 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><i class="fa-solid fa-person-running me-1"></i> Ruta Nocturna Las Palmas</td>
-                            <td>Parque Santa Catalina</td>
-                            <td>15/11/2023</td>
-                            <td class="text-end">
-                                <button class="btn action-btn view-btn" data-bs-toggle="modal" data-bs-target="#inscripcionModal"><i class="fa-solid fa-eye"></i></button>
-                                <button class="btn action-btn delete-btn" title="Cancelar inscripción"><i class="fa-solid fa-circle-xmark"></i></button>
+                        <tr th:each="act : ${misActividades}">
+                            <td>
+                                <i th:class="${'fa-solid me-1 ' + act.sportIcon}"></i>
+                                <span th:text="${act.title}">Nombre actividad</span>
                             </td>
-                        </tr>
-                        <tr>
-                            <td><i class="fa-solid fa-bolt me-1"></i> Entrenamiento velocidad</td>
-                            <td>Pista municipal</td>
-                            <td>18/03/2026</td>
+                            <td th:text="${act.place}">Lugar</td>
+                            <td th:text="${act.fechaCorta}">01/01/2024</td>
                             <td class="text-end">
-                                <button class="btn action-btn view-btn" data-bs-toggle="modal" data-bs-target="#detailModal"
-                                    data-item-type="actividad" data-item-title="Entrenamiento velocidad" data-item-desc="Series y intervalos en pista atlética."
-                                    data-item-meta1="Lugar: Pista municipal" data-item-meta2="Fecha: 18/03/2026"><i class="fa-solid fa-eye"></i></button>
-                                <button class="btn action-btn delete-btn" title="Cancelar inscripción"><i class="fa-solid fa-circle-xmark"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><i class="fa-solid fa-mountain me-1"></i> Trail nocturno</td>
-                            <td>Sierra de Guadarrama</td>
-                            <td>22/03/2026</td>
-                            <td class="text-end">
-                                <button class="btn action-btn view-btn" data-bs-toggle="modal" data-bs-target="#detailModal"
-                                    data-item-type="actividad" data-item-title="Trail nocturno" data-item-desc="Ruta nocturna con linternas. Experiencia única bajo las estrellas."
-                                    data-item-meta1="Lugar: Sierra de Guadarrama" data-item-meta2="Fecha: 22/03/2026"><i class="fa-solid fa-eye"></i></button>
-                                <button class="btn action-btn delete-btn" title="Cancelar inscripción"><i class="fa-solid fa-circle-xmark"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><i class="fa-solid fa-medal me-1"></i> Carrera popular</td>
-                            <td>Ciudad universitaria</td>
-                            <td>29/03/2026</td>
-                            <td class="text-end">
-                                <button class="btn action-btn view-btn" data-bs-toggle="modal" data-bs-target="#detailModal"
-                                    data-item-type="actividad" data-item-title="Carrera popular" data-item-desc="Participación en carrera organizada por el ayuntamiento."
-                                    data-item-meta1="Lugar: Ciudad universitaria" data-item-meta2="Fecha: 29/03/2026"><i class="fa-solid fa-eye"></i></button>
-                                <button class="btn action-btn delete-btn" title="Cancelar inscripción"><i class="fa-solid fa-circle-xmark"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><i class="fa-solid fa-route me-1"></i> Ruta larga</td>
-                            <td>Embalse de Santillana</td>
-                            <td>05/04/2026</td>
-                            <td class="text-end">
-                                <button class="btn action-btn view-btn" data-bs-toggle="modal" data-bs-target="#detailModal"
-                                    data-item-type="actividad" data-item-title="Ruta larga" data-item-desc="Preparación para media maratón. Distancias largas a ritmo moderado."
-                                    data-item-meta1="Lugar: Embalse de Santillana" data-item-meta2="Fecha: 05/04/2026"><i class="fa-solid fa-eye"></i></button>
-                                <button class="btn action-btn delete-btn" title="Cancelar inscripción"><i class="fa-solid fa-circle-xmark"></i></button>
+                                <button class="btn action-btn view-btn" title="Ver detalle" data-bs-toggle="modal" data-bs-target="#actividadModal"
+                                        th:data-actividad-title="${act.title}"
+                                        th:data-actividad-desc="${act.description}"
+                                        th:data-actividad-sport="${act.sport}"
+                                        th:data-actividad-fecha="${act.fechaFormateada}"
+                                        th:data-actividad-place="${act.place}"
+                                        th:data-actividad-dist="${act.distancia}">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                                <!-- Botón para cancelar inscripción -->
+                                <button class="btn action-btn delete-btn" type="button" title="Cancelar inscripción"
+                                        th:data-actividad-id="${act.idactividad}">
+                                    <i class="fa-solid fa-circle-xmark"></i>
+                                </button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
+
+            <!-- Mensaje si no hay actividades -->
+            <div class="text-center text-muted py-4" th:if="${misActividades.isEmpty()}">
+                <i class="fa-solid fa-person-running fa-2x mb-2"></i>
+                <p class="mb-0">No tienes actividades inscritas</p>
             </div>
         </div>
     </section>
@@ -206,7 +190,8 @@
                 </div>
             </div>
 
-            <div class="table-responsive">
+            <!-- Tabla de productos dinámica -->
+            <div class="table-responsive" th:if="${!compras.isEmpty()}">
                 <table class="table table-hover align-middle mb-0">
                     <thead>
                         <tr>
@@ -217,58 +202,44 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><i class="fa-solid fa-shirt me-1"></i> Camiseta Oficial Club AA</td>
-                            <td>15/11/2023</td>
-                            <td><span class="badge badge-status badge-success">Pagado</span></td>
-                            <td class="text-end">
-                                <button class="btn action-btn view-btn" data-bs-toggle="modal" data-bs-target="#compraModal"><i class="fa-solid fa-eye"></i></button>
+                        <tr th:each="compra : ${compras}">
+                            <td>
+                                <i class="fa-solid fa-box me-1"></i>
+                                <span th:text="${compra.producto.name}">Nombre producto</span>
                             </td>
-                        </tr>
-                        <tr>
-                            <td><i class="fa-solid fa-medal me-1"></i> Licencia federativa</td>
-                            <td>01/02/2026</td>
-                            <td><span class="badge badge-status badge-success">Activa</span></td>
-                            <td class="text-end">
-                                <button class="btn action-btn view-btn" data-bs-toggle="modal" data-bs-target="#detailModal"
-                                    data-item-type="producto" data-item-title="Licencia federativa" data-item-desc="Licencia de la Real Federación Española de Atletismo. Válida hasta 31/12/2026."
-                                    data-item-meta1="Estado: Activa" data-item-meta2="Fecha: 01/02/2026"><i class="fa-solid fa-eye"></i></button>
+                            <td th:text="${#dates.format(compra.createdAt, 'dd/MM/yyyy')}">01/01/2024</td>
+                            <td>
+                                <span class="badge badge-status"
+                                      th:classappend="${compra.estado.name() == 'reserved'} ? 'badge-warning' : (${compra.estado.name() == 'cancelled'} ? 'badge-danger' : 'badge-success')"
+                                      th:text="${compra.estado.name() == 'reserved'} ? 'Pendiente' : (${compra.estado.name() == 'cancelled'} ? 'Cancelado' : (${compra.estado.name() == 'paid'} ? 'Pagado' : 'Entregado'))">
+                                    Estado
+                                </span>
                             </td>
-                        </tr>
-                        <tr>
-                            <td><i class="fa-solid fa-bottle-water me-1"></i> Botella agua</td>
-                            <td>15/02/2026</td>
-                            <td><span class="badge badge-status badge-success">Entregado</span></td>
                             <td class="text-end">
-                                <button class="btn action-btn view-btn" data-bs-toggle="modal" data-bs-target="#detailModal"
-                                    data-item-type="producto" data-item-title="Botella agua" data-item-desc="Botella térmica de 500ml con el logo del club."
-                                    data-item-meta1="Estado: Entregado" data-item-meta2="Fecha: 15/02/2026"><i class="fa-solid fa-eye"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><i class="fa-solid fa-vest me-1"></i> Chaqueta entrenamiento</td>
-                            <td>20/02/2026</td>
-                            <td><span class="badge badge-status badge-warning">Pendiente</span></td>
-                            <td class="text-end">
-                                <button class="btn action-btn view-btn" data-bs-toggle="modal" data-bs-target="#detailModal"
-                                    data-item-type="producto" data-item-title="Chaqueta entrenamiento" data-item-desc="Chaqueta cortavientos ligera. Talla M. Pendiente de recogida."
-                                    data-item-meta1="Estado: Pendiente" data-item-meta2="Fecha: 20/02/2026"><i class="fa-solid fa-eye"></i></button>
-                                <button class="btn action-btn delete-btn" title="Cancelar pedido"><i class="fa-solid fa-circle-xmark"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><i class="fa-solid fa-hat-cowboy me-1"></i> Gorra club</td>
-                            <td>28/02/2026</td>
-                            <td><span class="badge badge-status badge-warning">Pendiente</span></td>
-                            <td class="text-end">
-                                <button class="btn action-btn view-btn" data-bs-toggle="modal" data-bs-target="#detailModal"
-                                    data-item-type="producto" data-item-title="Gorra club" data-item-desc="Gorra ajustable con el escudo del club bordado."
-                                    data-item-meta1="Estado: Pendiente" data-item-meta2="Fecha: 28/02/2026"><i class="fa-solid fa-eye"></i></button>
-                                <button class="btn action-btn delete-btn" title="Cancelar pedido"><i class="fa-solid fa-circle-xmark"></i></button>
+                                <button class="btn action-btn view-btn" title="Ver detalle" data-bs-toggle="modal" data-bs-target="#compraModal"
+                                        th:data-compra-nombre="${compra.producto.name}"
+                                        th:data-compra-desc="${compra.producto.description}"
+                                        th:data-compra-precio="${compra.producto.precio}"
+                                        th:data-compra-cant="${compra.cantidad}"
+                                        th:data-compra-total="${compra.total}"
+                                        th:data-compra-estado="${compra.estado.name()}">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                                <button class="btn action-btn delete-btn" title="Cancelar pedido"
+                                        th:if="${compra.estado.name() == 'reserved'}"
+                                        th:data-compra-id="${compra.idcompra}">
+                                    <i class="fa-solid fa-circle-xmark"></i>
+                                </button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
+
+            <!-- Mensaje si no hay compras -->
+            <div class="text-center text-muted py-4" th:if="${compras.isEmpty()}">
+                <i class="fa-solid fa-store fa-2x mb-2"></i>
+                <p class="mb-0">No tienes productos adquiridos</p>
             </div>
         </div>
     </section>
@@ -336,26 +307,26 @@
         </div>
     </div>
 
-    <!-- MODAL INSCRIPCIÓN (Actividad) -->
-    <div class="modal fade" id="inscripcionModal" tabindex="-1" aria-hidden="true">
+    <!-- MODAL DETALLE ACTIVIDAD -->
+    <div class="modal fade" id="actividadModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <div>
-                        <div class="badge bg-success mb-1"><i class="fa-solid fa-person-running me-1"></i>Inscripción</div>
-                        <h5 class="modal-title mb-0">Ruta Nocturna Las Palmas</h5>
+                        <div class="badge bg-success mb-1"><i class="fa-solid fa-person-running me-1"></i>Actividad</div>
+                        <h5 class="modal-title mb-0" data-actividad-title>Título de la actividad</h5>
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
                     <table class="table table-sm table-borderless mb-0">
                         <tbody>
-                            <tr><td class="text-body-secondary fw-semibold" style="width: 35%;">Título</td><td>Ruta Nocturna Las Palmas</td></tr>
-                            <tr><td class="text-body-secondary fw-semibold">Descripción</td><td>Ruta nocturna urbana de 10km</td></tr>
-                            <tr><td class="text-body-secondary fw-semibold">Deporte</td><td>Running</td></tr>
-                            <tr><td class="text-body-secondary fw-semibold">Fecha</td><td>15/11/2023 19:00</td></tr>
-                            <tr><td class="text-body-secondary fw-semibold">Lugar</td><td>Parque Santa Catalina</td></tr>
-                            <tr><td class="text-body-secondary fw-semibold">Distancia</td><td>10 km</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold" style="width: 35%;">Título</td><td data-actividad-title>Título</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Descripción</td><td data-actividad-desc>Descripción</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Deporte</td><td data-actividad-sport>Deporte</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Fecha</td><td data-actividad-fecha>Fecha</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Lugar</td><td data-actividad-place>Lugar</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Distancia</td><td data-actividad-dist>Distancia</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -366,31 +337,58 @@
         </div>
     </div>
 
-    <!-- MODAL COMPRA (Producto) -->
+    <!-- MODAL DETALLE COMPRA -->
     <div class="modal fade" id="compraModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <div>
                         <div class="badge bg-warning text-dark mb-1"><i class="fa-solid fa-store me-1"></i>Compra</div>
-                        <h5 class="modal-title mb-0">Camiseta Oficial Club AA</h5>
+                        <h5 class="modal-title mb-0" data-compra-nombre>Nombre del producto</h5>
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
                     <table class="table table-sm table-borderless mb-0">
                         <tbody>
-                            <tr><td class="text-body-secondary fw-semibold" style="width: 35%;">Producto</td><td>Camiseta Oficial Club AA</td></tr>
-                            <tr><td class="text-body-secondary fw-semibold">Descripción</td><td>Camiseta técnica de running edición 2024</td></tr>
-                            <tr><td class="text-body-secondary fw-semibold">Precio unitario</td><td>25,50 €</td></tr>
-                            <tr><td class="text-body-secondary fw-semibold">Cantidad</td><td>2</td></tr>
-                            <tr><td class="text-body-secondary fw-semibold">Total</td><td><strong>51,00 €</strong></td></tr>
-                            <tr><td class="text-body-secondary fw-semibold">Estado</td><td><span class="badge badge-status badge-success">Pagado</span></td></tr>
+                            <tr><td class="text-body-secondary fw-semibold" style="width: 35%;">Producto</td><td data-compra-nombre>Nombre</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Descripción</td><td data-compra-desc>Descripción</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Precio unitario</td><td><span data-compra-precio>0,00</span> €</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Cantidad</td><td data-compra-cant>1</td></tr>
+                            <tr><td class="text-body-secondary fw-semibold">Total</td><td><strong><span data-compra-total>0,00</span> €</strong></td></tr>
+                            <tr>
+                                <td class="text-body-secondary fw-semibold">Estado</td>
+                                <td><span class="badge badge-status" id="compra-estado-badge">Estado</span></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DARSE DE BAJA -->
+    <div class="modal fade" id="bajaModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fa-solid fa-user-minus me-2"></i>Confirmar baja</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-2" id="bajaMensaje">¿Confirma que se va a dar de baja en el club?</p>
+                    <p class="text-danger small mb-0"><i class="fa-solid fa-triangle-exclamation me-1"></i>
+                        Si es gestor del Club implica la baja del Club
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <a class="btn btn-danger" id="bajaConfirmarBtn" href="/club/unsuscribe">
+                        <i class="fa-solid fa-check me-1"></i> Aceptar
+                    </a>
                 </div>
             </div>
         </div>
