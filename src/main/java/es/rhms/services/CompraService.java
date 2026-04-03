@@ -1,6 +1,7 @@
 package es.rhms.services;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,16 @@ public class CompraService {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+
+	/**
+	 * Obtiene las compras de un usuario filtradas por club
+	 * @param userId ID del usuario
+	 * @param clubId ID del club
+	 * @return Lista de compras del usuario en el club especificado
+	 */
+	public List<Compra> findComprasByUserIdAndClubId(int userId, int clubId) {
+		return compraRepository.findComprasByUserIdAndClubId(userId, clubId);
+	}
 
 	/**
 	 * Reserva un producto para un usuario (compra con estado reserved)

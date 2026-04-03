@@ -75,11 +75,23 @@ public class RequestService {
 		if (optional.isPresent()) {
 			Request request = optional.get();
 			request.setEstado(nuevoEstado);
-			request.setUpdatedBy(updatedBy);  
+			request.setUpdatedBy(updatedBy);
 			requestRepository.save(request);
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Busca una petición pendiente de un usuario para un club específico
+	 * @param tipo Tipo de petición (club o partner)
+	 * @param email Email del usuario
+	 * @param clbTarget Nombre del club
+	 * @param estado Estado de la petición
+	 * @return La petición si existe, null si no
+	 */
+	public Request findByTipoAndUsrEmailAndClbTargetAndEstado(TipoRequest tipo, String email, String clbTarget, EstadoRequest estado) {
+		return requestRepository.findByTipoAndUsrEmailAndClbTargetAndEstado(tipo, email, clbTarget, estado);
 	}
 
 }

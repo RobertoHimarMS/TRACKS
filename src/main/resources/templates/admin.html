@@ -13,6 +13,8 @@
     <!-- CSRF tokens para peticiones AJAX -->
     <meta name="_csrf" th:content="${_csrf?.token}"/>
     <meta name="_csrf_header" th:content="${_csrf?.headerName}"/>
+    <!-- Contexto de la aplicación para URLs AJAX -->
+    <script th:inline="javascript">const CONTEXT_PATH = /*[[@{/}]]*/ '';</script>
 
     <!-- CSS y iconos externos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"

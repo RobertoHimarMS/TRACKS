@@ -1,5 +1,6 @@
 package es.rhms.controllers;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
 import es.rhms.models.Club;
 import es.rhms.models.Request;
@@ -19,11 +20,11 @@ import es.rhms.models.Request.EstadoRequest;
 import es.rhms.models.Request.TipoRequest;
 import es.rhms.models.Socios.RolSocio;
 import es.rhms.models.Usuario;
-import es.rhms.repositories.RequestRepository;
 import es.rhms.services.ClubService;
 import es.rhms.services.RequestService;
 import es.rhms.services.SociosService;
 import es.rhms.services.UsuarioService;
+import es.rhms.utilities.FileUploadUtility;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
@@ -45,7 +46,7 @@ public class ApiRequest {
 	private SociosService sociosService;
 
 	@Autowired
-	private RequestRepository requestRepository;
+	private FileUploadUtility fileUploadUtility;
 
 	/**
 	 * Procesa solicitudes de alta (club o socio) desde el formulario unificado
@@ -61,7 +62,7 @@ public class ApiRequest {
 	 * - Redirige a /club/{idclub} con mensaje
 	 */
 	@PostMapping("/new")
-	public RedirectView nuevaSolicitud(
+	public String nuevaSolicitud(
 			@RequestParam String type,
 			@RequestParam String clb_target,
 			@RequestParam String clb_description,
@@ -78,6 +79,8 @@ public class ApiRequest {
 			@RequestParam(required = false) String usr_phone,
 			@RequestParam(required = false) String usr_borned,
 			@RequestParam(required = false) String usr_dni,
+			@RequestParam(required = false) MultipartFile clb_photo,
+			@RequestParam(required = false) MultipartFile usr_photo,
 			@RequestParam int clubId,
 			RedirectAttributes redirectAttributes,
 			HttpServletRequest httpRequest) {
@@ -96,12 +99,40 @@ public class ApiRequest {
 
 			// Verificar duplicados según tipo (solo para solicitud de socio)
 			if (tipoSolicitud == TipoRequest.partner) {
-				Request existingRequest = requestRepository.findByTipoAndUsrEmailAndClbTargetAndEstado(
+				Request existingRequest = requestService.findByTipoAndUsrEmailAndClbTargetAndEstado(
 						TipoRequest.partner, emailSolicitante, clb_target, EstadoRequest.pending);
 
 				if (existingRequest != null) {
 					redirectAttributes.addAttribute("mensaje", "duplicate");
-					return new RedirectView("/club/" + clubId, true);
+					return "redirect:/club/" + clubId;
+				}
+			}
+
+			// Procesar imágenes
+			String clbPhotoName = null;
+			String usrPhotoName = null;
+
+			// Procesar logo del club si se ha subido
+			if (clb_photo != null && !clb_photo.isEmpty()) {
+				try {
+					clbPhotoName = fileUploadUtility.saveImage(clb_photo, "clubs");
+				} catch (IllegalArgumentException e) {
+					redirectAttributes.addAttribute("mensaje", "ko");
+					return "redirect:/newclub";
+				}
+			}
+
+			// Procesar foto de usuario si se ha subido y usuario no está logueado
+			if (usr_photo != null && !usr_photo.isEmpty() && usuarioLogueado == null) {
+				try {
+					usrPhotoName = fileUploadUtility.saveImage(usr_photo, "users");
+				} catch (IllegalArgumentException e) {
+					redirectAttributes.addAttribute("mensaje", "ko");
+					if (tipoSolicitud == TipoRequest.club) {
+						return "redirect:/newclub";
+					} else {
+						return "redirect:/club/" + clubId;
+					}
 				}
 			}
 
@@ -117,6 +148,7 @@ public class ApiRequest {
 			request.setClbEmail(clb_email);
 			request.setClbCp(clb_cp);
 			request.setClbCity(clb_city);
+			request.setClbPhoto(clbPhotoName);
 
 			// Datos del solicitante
 			if (usuarioLogueado != null) {
@@ -142,6 +174,7 @@ public class ApiRequest {
 				request.setUsrCp(usr_cp);
 				request.setUsrCity(usr_city);
 				request.setUsrPhone(usr_phone);
+				request.setUsrPhoto(usrPhotoName);
 
 				// Fecha de nacimiento
 				if (usr_borned != null && !usr_borned.isEmpty()) {
@@ -163,17 +196,24 @@ public class ApiRequest {
 			// Redirección según tipo
 			redirectAttributes.addAttribute("mensaje", "ok");
 			if (tipoSolicitud == TipoRequest.club) {
-				return new RedirectView("/home", true);
+				return "redirect:/home";
 			} else {
-				return new RedirectView("/club/" + clubId, true);
+				return "redirect:/club/" + clubId;
 			}
 
+		} catch (IOException e) {
+			redirectAttributes.addAttribute("mensaje", "ko");
+			if ("club".equals(type)) {
+				return "redirect:/home";
+			} else {
+				return "redirect:/club/" + clubId;
+			}
 		} catch (Exception e) {
 			redirectAttributes.addAttribute("mensaje", "ko");
 			if ("club".equals(type)) {
-				return new RedirectView("/home", true);
+				return "redirect:/home";
 			} else {
-				return new RedirectView("/club/" + clubId, true);
+				return "redirect:/club/" + clubId;
 			}
 		}
 	}
@@ -228,7 +268,7 @@ public class ApiRequest {
 			}
 			return procesarPeticionPartner(req, accept, actualUserId);
 		} else {
-			return ResponseEntity.badRequest().body(Map.of("error", "Tipo de petición desconocido"));
+			return ResponseEntity.badRequest().body(Map.of("error", "Tipo de petición desconocida"));
 		}
 	}
 

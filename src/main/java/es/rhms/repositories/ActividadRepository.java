@@ -30,8 +30,8 @@ public interface ActividadRepository extends JpaRepository<Actividad, Integer> {
 	@Query(value = "DELETE FROM se_inscribe WHERE Users_iduser = :iduser AND Actividad_idactividad IN (SELECT idactividad FROM Actividad WHERE Club_idclub = :idclub)", nativeQuery = true)
 	int deleteInscripcionesByUserAndClub(@Param("iduser") int iduser, @Param("idclub") int idclub);
 
-	@Query("SELECT a FROM Actividad a JOIN FETCH a.club c JOIN a.usuariosInscritos u WHERE u.iduser = :userId ORDER BY a.fecha DESC")
-	List<Actividad> findInscripcionesByUserId(@Param("userId") int userId);
+	@Query("SELECT a FROM Actividad a JOIN FETCH a.club c JOIN a.usuariosInscritos u WHERE u.iduser = :userId AND c.idclub = :clubId ORDER BY a.fecha DESC")
+	List<Actividad> findInscripcionesByUserIdAndClubId(@Param("userId") int userId, @Param("clubId") int clubId);
 
 	@Query("SELECT a.idactividad FROM Actividad a JOIN a.usuariosInscritos u WHERE u.iduser = :userId")
 	Set<Integer> findInscribedActivityIds(@Param("userId") int userId);

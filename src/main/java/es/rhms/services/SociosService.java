@@ -119,6 +119,16 @@ public class SociosService {
 	}
 
 	/**
+	 * Obtiene todas las relaciones de socio de un usuario
+	 * @param usuario Usuario del que obtener los socios
+	 * @return Lista de relaciones Socios del usuario
+	 */
+	@Transactional(readOnly = true)
+	public List<Socios> findByUsuario(Usuario usuario) {
+		return sociosRepository.findByUsuario(usuario);
+	}
+
+	/**
 	 * Da de baja a un socio o manager de un club
 	 * - Si es manager: elimina el club completo (incluye socios, actividades, publicaciones, productos)
 	 * - Si es partner: da de baja al socio y elimina sus inscripciones en actividades del club

@@ -23,7 +23,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.view.RedirectView;
 
 import es.rhms.models.Actividad;
 import es.rhms.models.Club;
@@ -33,11 +32,9 @@ import es.rhms.models.Publicacion;
 import es.rhms.models.Request;
 import es.rhms.models.Socios;
 import es.rhms.models.Usuario;
-import es.rhms.repositories.ActividadRepository;
-import es.rhms.repositories.CompraRepository;
-import es.rhms.repositories.SociosRepository;
 import es.rhms.services.ActividadService;
 import es.rhms.services.ClubService;
+import es.rhms.services.CompraService;
 import es.rhms.services.ProductoService;
 import es.rhms.services.PublicacionService;
 import es.rhms.services.RequestService;
@@ -68,13 +65,7 @@ public class ClubControllers {
 	private SociosService sociosService;
 
 	@Autowired
-	private ActividadRepository actividadRepository;
-
-	@Autowired
-	private CompraRepository compraRepository;
-
-	@Autowired
-	private SociosRepository sociosRepository;
+	private CompraService compraService;
 
 	@GetMapping("/{id}")
 	public String verClub(@PathVariable("id") int id, Model model, HttpServletRequest request) {
@@ -105,7 +96,7 @@ public class ClubControllers {
 			// Obtener actividades inscritas solo si está viendo su club activo
 			Club clubLogged = (Club) session.getAttribute("clublogged");
 			if (clubLogged != null && clubLogged.getIdclub() == id) {
-				actividadesInscritas = actividadRepository.findInscribedActivityIds(usuario.getIduser());
+				actividadesInscritas = actividadService.findInscribedActivityIds(usuario.getIduser());
 			}
 		}
 		model.addAttribute("esSocio", esSocio);
@@ -166,7 +157,8 @@ public class ClubControllers {
 
 	/**
 	 * Muestra el carné del socio con sus actividades y compras
-	 * Solo accesible para usuarios logueados
+	 * Solo accesible para usuarios logueados con club activo
+	 * Filtra las actividades y compras por el club activo en sesión
 	 */
 	@GetMapping("/partner/{iduser}")
 	public String verCarne(@PathVariable("iduser") int iduser, Model model, HttpServletRequest request) {
@@ -182,26 +174,22 @@ public class ClubControllers {
 			return "redirect:/home";
 		}
 
-		// Obtener el club activo de la sesión
+		// Obtener el club activo de la sesión (siempre existe por Spring Security)
 		Club club = (Club) session.getAttribute("clublogged");
 
 		// Obtener fecha de alta en el club actual
 		Date fechaAlta = null;
-		if (club != null) {
-			List<Socios> sociosList = sociosRepository.findByUsuario(usuarioLogueado);
-			for (Socios socio : sociosList) {
-				if (socio.getClub().getIdclub() == club.getIdclub() && socio.getUnsuscribedAt() == null) {
-					fechaAlta = socio.getRegisteredAt();
-					break;
-				}
+		List<Socios> sociosList = sociosService.findByUsuario(usuarioLogueado);
+		for (Socios socio : sociosList) {
+			if (socio.getClub().getIdclub() == club.getIdclub() && socio.getUnsuscribedAt() == null) {
+				fechaAlta = socio.getRegisteredAt();
+				break;
 			}
 		}
 
-		// Obtener actividades inscritas del usuario (con JOIN FETCH para evitar LazyInitializationException)
-		List<Actividad> misActividades = actividadRepository.findInscripcionesByUserId(iduser);
-
-		// Obtener compras del usuario (con JOIN FETCH para evitar LazyInitializationException)
-		List<Compra> compras = compraRepository.findComprasByUserId(iduser);
+		// Obtener actividades inscritas y compras del usuario en el club activo
+		List<Actividad> misActividades = actividadService.findInscripcionesByUserIdAndClubId(iduser, club.getIdclub());
+		List<Compra> compras = compraService.findComprasByUserIdAndClubId(iduser, club.getIdclub());
 
 		// Pasar datos al modelo
 		model.addAttribute("usuario", usuarioLogueado);
@@ -276,7 +264,8 @@ public class ClubControllers {
 			return "redirect:/home";
 		}
 
-		model.addAttribute("club", actividad.getClub());
+		// Usar clubLogged para evitar problemas de lazy loading
+		model.addAttribute("club", clubLogged);
 		model.addAttribute("actividad", actividad);  // no null = modo edición
 		return "formactivity";
 	}
@@ -344,7 +333,8 @@ public class ClubControllers {
 			return "redirect:/home";
 		}
 
-		model.addAttribute("club", publicacion.getClub());
+		// Usar clubLogged para evitar problemas de lazy loading
+		model.addAttribute("club", clubLogged);
 		model.addAttribute("publicacion", publicacion);  // no null = modo edición
 		return "formpublish";
 	}
@@ -412,7 +402,8 @@ public class ClubControllers {
 			return "redirect:/home";
 		}
 
-		model.addAttribute("club", producto.getClub());
+		// Usar clubLogged en lugar de producto.getClub() para evitar problemas de lazy loading
+		model.addAttribute("club", clubLogged);
 		model.addAttribute("producto", producto);  // no null = modo edición
 		return "formproduct";
 	}

@@ -1,6 +1,7 @@
 package es.rhms.services;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,25 @@ public class ActividadService {
 	 */
 	public Actividad findById(int idactividad) {
 		return actividadRepository.findById(idactividad).orElse(null);
+	}
+
+	/**
+	 * Obtiene las actividades en las que está inscrito un usuario, filtradas por club
+	 * @param userId ID del usuario
+	 * @param clubId ID del club
+	 * @return Lista de actividades del usuario en el club especificado
+	 */
+	public List<Actividad> findInscripcionesByUserIdAndClubId(int userId, int clubId) {
+		return actividadRepository.findInscripcionesByUserIdAndClubId(userId, clubId);
+	}
+
+	/**
+	 * Obtiene los IDs de las actividades en las que está inscrito un usuario
+	 * @param userId ID del usuario
+	 * @return Set de IDs de actividades inscritas
+	 */
+	public Set<Integer> findInscribedActivityIds(int userId) {
+		return actividadRepository.findInscribedActivityIds(userId);
 	}
 
 	/**

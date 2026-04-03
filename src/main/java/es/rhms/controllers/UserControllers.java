@@ -24,10 +24,9 @@ import es.rhms.models.Actividad;
 import es.rhms.models.Club;
 import es.rhms.models.Producto;
 import es.rhms.models.Usuario;
-import es.rhms.repositories.ActividadRepository;
-import es.rhms.repositories.ProductoRepository;
 import es.rhms.services.ActividadService;
 import es.rhms.services.CompraService;
+import es.rhms.services.ProductoService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -39,13 +38,10 @@ public class UserControllers {
 	private ActividadService actividadService;
 
 	@Autowired
-	private ActividadRepository actividadRepository;
-
-	@Autowired
 	private CompraService compraService;
 
 	@Autowired
-	private ProductoRepository productoRepository;
+	private ProductoService productoService;
 
 	/**
 	 * Inscribe al usuario logueado en una actividad
@@ -76,7 +72,7 @@ public class UserControllers {
 		}
 
 		// Obtener la actividad
-		Actividad actividad = actividadRepository.findById(idact).orElse(null);
+		Actividad actividad = actividadService.findById(idact);
 		if (actividad == null) {
 			response.put("success", false);
 			response.put("error", "Actividad no encontrada");
@@ -183,7 +179,7 @@ public class UserControllers {
 		}
 
 		// Obtener el producto
-		Producto producto = productoRepository.findById(idproducto).orElse(null);
+		Producto producto = productoService.findById(idproducto);
 		if (producto == null) {
 			response.put("success", false);
 			response.put("error", "Producto no encontrado");

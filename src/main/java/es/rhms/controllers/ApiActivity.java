@@ -1,11 +1,13 @@
 /** API REST PARA GESTIÓN DE ACTIVIDADES
  *  ===========================================================================
  *  POST /api/activity/create → Crea una nueva actividad para un club
- *
+ *  POST /api/activity/update/{id} → Actualiza una actividad existente
+ *  POST /api/activity/delete/{id} → Elimina una actividad
  */
 
 package es.rhms.controllers;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,18 +17,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import es.rhms.models.Actividad;
 import es.rhms.models.Club;
-import es.rhms.models.Usuario;
 import es.rhms.services.ActividadService;
 import es.rhms.services.ClubService;
+import es.rhms.utilities.FileUploadUtility;
 import jakarta.servlet.http.HttpSession;
 
-@RestController
+@Controller
 @RequestMapping("/api/activity")
 public class ApiActivity {
 
@@ -36,26 +38,29 @@ public class ApiActivity {
 	@Autowired
 	private ClubService clubService;
 
+	@Autowired
+	private FileUploadUtility fileUploadUtility;
+
 	@PostMapping("/create")
-	public RedirectView crearActividad(
-			@RequestParam("idclub") int idclub,
-			@RequestParam("title") String title,
-			@RequestParam("description") String description,
-			@RequestParam("sport") String sport,
+	public String crearActividad(
+			@RequestParam int idclub,
+			@RequestParam String title,
+			@RequestParam String description,
+			@RequestParam String sport,
 			@RequestParam("fecha") String fechaStr,
-			@RequestParam("place") String place,
-			@RequestParam(value = "distancia", required = false) Integer distancia,
+			@RequestParam String place,
+			@RequestParam(required = false) Integer distancia,
+			@RequestParam(required = false) MultipartFile photo,
 			RedirectAttributes redirectAttributes,
 			HttpSession session) {
 
 		// Verificar sesión y rol manager
 		String rol = (String) session.getAttribute("rollogged");
-		Usuario usuario = (Usuario) session.getAttribute("userlogged");
 		Club clubLogged = (Club) session.getAttribute("clublogged");
 
 		if (rol == null || !"manager".equals(rol) || clubLogged == null || clubLogged.getIdclub() != idclub) {
 			redirectAttributes.addFlashAttribute("mensajeActivity", "No tienes permisos para realizar esta acción");
-			return new RedirectView("/home");
+			return "redirect:/home";
 		}
 
 		try {
@@ -63,7 +68,7 @@ public class ApiActivity {
 			Club club = clubService.findById(idclub).orElse(null);
 			if (club == null) {
 				redirectAttributes.addFlashAttribute("mensajeActivity", "Club no encontrado");
-				return new RedirectView("/home");
+				return "redirect:/home";
 			}
 
 			// Parsear la fecha
@@ -80,31 +85,46 @@ public class ApiActivity {
 			actividad.setDistancia(distancia);
 			actividad.setClub(club);
 
-			// Guardar (aud_created_at y aud_updated_at se actualizan por trigger en BD)
+			// Procesar imagen si se ha subido
+			if (photo != null && !photo.isEmpty()) {
+				try {
+					String photoName = fileUploadUtility.saveImage(photo, "activities");
+					actividad.setPhoto(photoName);
+				} catch (IllegalArgumentException e) {
+					redirectAttributes.addFlashAttribute("mensajeActivity", e.getMessage());
+					return "redirect:/club/" + idclub;
+				}
+			}
+
+			// Guardar
 			actividadService.save(actividad);
 
 			redirectAttributes.addFlashAttribute("mensajeActivity", "Actividad creada con éxito");
-			return new RedirectView("/club/" + idclub);
+			return "redirect:/club/" + idclub;
 
 		} catch (ParseException e) {
 			redirectAttributes.addFlashAttribute("mensajeActivity", "Error en el formato de fecha");
-			return new RedirectView("/club/" + idclub);
+			return "redirect:/club/" + idclub;
+		} catch (IOException e) {
+			redirectAttributes.addFlashAttribute("mensajeActivity", "Error al subir la imagen");
+			return "redirect:/club/" + idclub;
 		} catch (Exception e) {
 			redirectAttributes.addFlashAttribute("mensajeActivity", "Error al crear la actividad");
-			return new RedirectView("/club/" + idclub);
+			return "redirect:/club/" + idclub;
 		}
 	}
 
 	@PostMapping("/update/{idactividad}")
-	public RedirectView actualizarActividad(
-			@PathVariable("idactividad") int idactividad,
-			@RequestParam("idclub") int idclub,
-			@RequestParam("title") String title,
-			@RequestParam("description") String description,
-			@RequestParam("sport") String sport,
+	public String actualizarActividad(
+			@PathVariable int idactividad,
+			@RequestParam int idclub,
+			@RequestParam String title,
+			@RequestParam String description,
+			@RequestParam String sport,
 			@RequestParam("fecha") String fechaStr,
-			@RequestParam("place") String place,
-			@RequestParam(value = "distancia", required = false) Integer distancia,
+			@RequestParam String place,
+			@RequestParam(required = false) Integer distancia,
+			@RequestParam(required = false) MultipartFile photo,
 			RedirectAttributes redirectAttributes,
 			HttpSession session) {
 
@@ -114,7 +134,7 @@ public class ApiActivity {
 
 		if (rol == null || !"manager".equals(rol) || clubLogged == null || clubLogged.getIdclub() != idclub) {
 			redirectAttributes.addFlashAttribute("mensajeActivity", "No tienes permisos para realizar esta acción");
-			return new RedirectView("/home");
+			return "redirect:/home";
 		}
 
 		try {
@@ -122,13 +142,13 @@ public class ApiActivity {
 			Actividad actividad = actividadService.findById(idactividad);
 			if (actividad == null) {
 				redirectAttributes.addFlashAttribute("mensajeActivity", "Error al guardar la actividad");
-				return new RedirectView("/club/" + idclub);
+				return "redirect:/club/" + idclub;
 			}
 
 			// Verificar que la actividad pertenece al club del manager
 			if (actividad.getClub().getIdclub() != idclub) {
 				redirectAttributes.addFlashAttribute("mensajeActivity", "No tienes permisos para realizar esta acción");
-				return new RedirectView("/home");
+				return "redirect:/home";
 			}
 
 			// Parsear la fecha
@@ -143,24 +163,38 @@ public class ApiActivity {
 			actividad.setPlace(place);
 			actividad.setDistancia(distancia);
 
-			// Guardar (aud_updated_at se actualiza por trigger en BD)
+			// Procesar imagen si se ha subido una nueva
+			if (photo != null && !photo.isEmpty()) {
+				try {
+					String photoName = fileUploadUtility.saveImage(photo, "activities");
+					actividad.setPhoto(photoName);
+				} catch (IllegalArgumentException e) {
+					redirectAttributes.addFlashAttribute("mensajeActivity", e.getMessage());
+					return "redirect:/club/" + idclub;
+				}
+			}
+
+			// Guardar
 			actividadService.save(actividad);
 
 			redirectAttributes.addFlashAttribute("mensajeActivity", "La actividad se actualizó");
-			return new RedirectView("/club/" + idclub);
+			return "redirect:/club/" + idclub;
 
 		} catch (ParseException e) {
 			redirectAttributes.addFlashAttribute("mensajeActivity", "Error en el formato de fecha");
-			return new RedirectView("/club/" + idclub);
+			return "redirect:/club/" + idclub;
+		} catch (IOException e) {
+			redirectAttributes.addFlashAttribute("mensajeActivity", "Error al subir la imagen");
+			return "redirect:/club/" + idclub;
 		} catch (Exception e) {
 			redirectAttributes.addFlashAttribute("mensajeActivity", "Error al guardar la actividad");
-			return new RedirectView("/club/" + idclub);
+			return "redirect:/club/" + idclub;
 		}
 	}
 
 	@PostMapping("/delete/{idactividad}")
-	public RedirectView eliminarActividad(
-			@PathVariable("idactividad") int idactividad,
+	public String eliminarActividad(
+			@PathVariable int idactividad,
 			RedirectAttributes redirectAttributes,
 			HttpSession session) {
 
@@ -170,7 +204,7 @@ public class ApiActivity {
 
 		if (rol == null || !"manager".equals(rol) || clubLogged == null) {
 			redirectAttributes.addFlashAttribute("mensajeActivity", "No tienes permisos para realizar esta acción");
-			return new RedirectView("/home");
+			return "redirect:/home";
 		}
 
 		try {
@@ -178,13 +212,13 @@ public class ApiActivity {
 			Actividad actividad = actividadService.findById(idactividad);
 			if (actividad == null) {
 				redirectAttributes.addFlashAttribute("mensajeActivity", "Actividad no encontrada");
-				return new RedirectView("/club/" + clubLogged.getIdclub());
+				return "redirect:/club/" + clubLogged.getIdclub();
 			}
 
 			// Verificar que la actividad pertenece al club del manager
 			if (actividad.getClub().getIdclub() != clubLogged.getIdclub()) {
 				redirectAttributes.addFlashAttribute("mensajeActivity", "No tienes permisos para realizar esta acción");
-				return new RedirectView("/home");
+				return "redirect:/home";
 			}
 
 			int idclub = actividad.getClub().getIdclub();
@@ -196,11 +230,11 @@ public class ApiActivity {
 			actividadService.deleteById(idactividad);
 
 			redirectAttributes.addFlashAttribute("mensajeActivity", "La actividad ha sido eliminada");
-			return new RedirectView("/club/" + idclub);
+			return "redirect:/club/" + idclub;
 
 		} catch (Exception e) {
 			redirectAttributes.addFlashAttribute("mensajeActivity", "No se ha podido eliminar la actividad");
-			return new RedirectView("/club/" + clubLogged.getIdclub());
+			return "redirect:/club/" + clubLogged.getIdclub();
 		}
 	}
 }

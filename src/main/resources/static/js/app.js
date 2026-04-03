@@ -344,7 +344,7 @@
 
             if (email && email.includes('@')) {
                 $.ajax({
-                    url: '/api/misclubes',
+                    url: CONTEXT_PATH + 'api/misclubes',
                     method: 'GET',
                     data: { email: email },
                     dataType: 'json',
@@ -457,7 +457,7 @@
             const csrfToken = $('meta[name="_csrf"]').attr('content');
 
             $.ajax({
-                url: '/api/ticket/new',
+                url: CONTEXT_PATH + 'api/ticket/new',
                 method: 'POST',
                 data: {
                     subject: subjectInput.value.trim(),
@@ -504,7 +504,7 @@
                 const ticketId = this.getAttribute('data-id');
 
                 $.ajax({
-                    url: '/api/ticket/ver/' + ticketId,
+                    url: CONTEXT_PATH + 'api/ticket/ver/' + ticketId,
                     method: 'GET',
                     success: function(ticket) {
                         document.getElementById('ticket-subject').textContent = ticket.subject || 'Sin asunto';
@@ -547,7 +547,7 @@
                 const csrfToken = $('meta[name="_csrf"]').attr('content');
 
                 $.ajax({
-                    url: '/api/ticket/edit/' + ticketId,
+                    url: CONTEXT_PATH + 'api/ticket/edit/' + ticketId,
                     method: 'POST',
                     data: { _csrf: csrfToken },
                     success: function() {
@@ -579,7 +579,7 @@
                 const requestId = this.getAttribute('data-id');
 
                 $.ajax({
-                    url: '/api/request/ver/' + requestId,
+                    url: CONTEXT_PATH + 'api/request/ver/' + requestId,
                     method: 'GET',
                     success: function(req) {
                         // Título del modal
@@ -635,7 +635,7 @@
                 const requestId = this.getAttribute('data-id');
 
                 $.ajax({
-                    url: '/api/request/ver/' + requestId,
+                    url: CONTEXT_PATH + 'api/request/ver/' + requestId,
                     method: 'GET',
                     success: function(req) {
                         // Título del modal
@@ -692,7 +692,7 @@
                 const csrfToken = $('meta[name="_csrf"]').attr('content');
 
                 $.ajax({
-                    url: '/api/request/edit/' + requestId,
+                    url: CONTEXT_PATH + 'api/request/edit/' + requestId,
                     method: 'POST',
                     data: { accept: true, _csrf: csrfToken },
                     dataType: 'json',
@@ -737,7 +737,7 @@
                 const csrfToken = $('meta[name="_csrf"]').attr('content');
 
                 $.ajax({
-                    url: '/api/request/edit/' + requestId,
+                    url: CONTEXT_PATH + 'api/request/edit/' + requestId,
                     method: 'POST',
                     data: { accept: false, _csrf: csrfToken },
                     dataType: 'json',
@@ -782,7 +782,7 @@
                 const csrfToken = $('meta[name="_csrf"]').attr('content');
 
                 $.ajax({
-                    url: '/api/request/edit/' + requestId,
+                    url: CONTEXT_PATH + 'api/request/edit/' + requestId,
                     method: 'POST',
                     data: { accept: true, _csrf: csrfToken },
                     dataType: 'json',
@@ -827,7 +827,7 @@
                 const csrfToken = $('meta[name="_csrf"]').attr('content');
 
                 $.ajax({
-                    url: '/api/request/edit/' + requestId,
+                    url: CONTEXT_PATH + 'api/request/edit/' + requestId,
                     method: 'POST',
                     data: { accept: false, _csrf: csrfToken },
                     dataType: 'json',

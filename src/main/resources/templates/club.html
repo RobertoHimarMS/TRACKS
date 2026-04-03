@@ -13,6 +13,8 @@
     <!-- CSRF para peticiones AJAX -->
     <meta name="_csrf" th:content="${_csrf?.token}"/>
     <meta name="_csrf_header" th:content="${_csrf?.headerName}"/>
+    <!-- Contexto de la aplicación para URLs AJAX -->
+    <script th:inline="javascript">const CONTEXT_PATH = /*[[@{/}]]*/ '';</script>
 
     <!-- CSS y iconos externos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
@@ -358,7 +360,7 @@
                 <div class="slider-viewport" id="tiendaViewport">
                     <div class="slider-track" id="tiendaTrack">
                         <!-- Productos dinámicos desde la base de datos -->
-                        <div class="slide slide-item" th:each="producto : ${productos}">
+                        <div class="slide slide-item" th:each="producto : ${productos}" th:if="${producto.stock >= 0}">
                             <div class="card club-card h-100">
                                 <!-- Imagen si existe -->
                                 <img th:if="${producto.photo != null and !producto.photo.isEmpty()}"

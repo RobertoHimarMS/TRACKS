@@ -10,6 +10,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title th:text="${actividad == null} ? 'TrackYours • Nueva Actividad' : 'TrackYours • Editar Actividad'">TrackYours • Actividad</title>
 
+    <!-- CSRF tokens para formularios -->
+    <meta name="_csrf" th:content="${_csrf?.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf?.headerName}"/>
+
+    <!-- Contexto de la aplicación para URLs AJAX -->
+    <script th:inline="javascript">const CONTEXT_PATH = /*[[@{/}]]*/ '';</script>
+
     <!-- CSS y iconos externos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
                             integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
@@ -82,24 +89,26 @@
                         </div>
 
                         <!-- Formulario con action condicional -->
-                        <form th:action="${actividad == null} ? @{/api/activity/create} : @{/api/activity/update/{id}(id=${actividad.idactividad})}" method="post">
+                        <form th:action="${actividad == null} ? @{/api/activity/create} : @{/api/activity/update/{id}(id=${actividad.idactividad})}" method="post" enctype="multipart/form-data">
+                            <!-- Token CSRF -->
+                            <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}"/>
                             <!-- Campo oculto con el ID del club -->
                             <input type="hidden" name="idclub" th:value="${club.idclub}">
 
                             <div class="row g-3">
                                 <div class="col-md-8">
                                     <label class="form-label"><small class="me-1"><i class="fa-solid fa-heading"></i></small> Título *</label>
-                                    <input class="form-control" name="title" required placeholder="Ruta Nocturna Las Palmas" maxlength="40"
+                                    <input class="form-control" name="title" required maxlength="40"
                                            th:value="${actividad?.title}">
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label"><small class="me-1"><i class="fa-solid fa-table-tennis-paddle-ball"></i></small> Deporte *</label>
-                                    <input class="form-control" name="sport" required placeholder="Running, Natación..." maxlength="20"
+                                    <input class="form-control" name="sport" required maxlength="20"
                                            th:value="${actividad?.sport}">
                                 </div>
                                 <div class="col-12">
                                     <label class="form-label"><small class="me-1"><i class="fa-solid fa-align-left"></i></small> Descripción *</label>
-                                    <textarea class="form-control" rows="2" name="description" required placeholder="Describe la actividad..." maxlength="240"
+                                    <textarea class="form-control" rows="2" name="description" required maxlength="240"
                                               th:text="${actividad?.description}"></textarea>
                                 </div>
                                 <div class="col-md-6">
@@ -109,13 +118,18 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label"><small class="me-1"><i class="fa-solid fa-location-dot"></i></small> Lugar *</label>
-                                    <input class="form-control" name="place" required placeholder="Parque Santa Catalina" maxlength="40"
+                                    <input class="form-control" name="place" required maxlength="40"
                                            th:value="${actividad?.place}">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label"><small class="me-1"><i class="fa-solid fa-route"></i></small> Distancia (km)</label>
-                                    <input class="form-control" type="number" name="distancia" placeholder="10" min="0"
+                                    <input class="form-control" type="number" name="distancia" min="0"
                                            th:value="${actividad?.distancia}">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label"><small class="me-1"><i class="fa-solid fa-image"></i></small> Imagen</label>
+                                    <input class="form-control" type="file" name="photo" accept="image/*">
+                                    <small class="text-body-secondary">Opcional. Tamaño máximo: 10MB</small>
                                 </div>
                             </div>
 
