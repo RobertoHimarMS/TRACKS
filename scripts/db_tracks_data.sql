@@ -30,29 +30,29 @@ INSERT INTO Request (idrequest, tipo, estado, clb_target, clb_description, clb_s
 				  usr_dni, usr_name, usr_surname, usr_email, usr_passwd, usr_cp, usr_city, usr_borned, usr_phone, usr_photo, aud_updated_by) 
 VALUES 
 	(1, 'club', 'accepted', 'Club AA', 'Club de running', 'run', 'info@clubaa.com', '35000', 'Las Palmas', 'run.jpg', '11111111A',
-					'Gestor', 'AA', 'gestoraa@gmail.com', '1234', '35000', 'Las Palmas', '1978-04-04', '666-656565', 'gestoraa.jpg', 2),  	-- club aceptada
+					'Gestor', 'AA', 'gestoraa@gmail.com', '{noop}1234', '35000', 'Las Palmas', '1978-04-04', '666-656565', 'gestoraa.jpg', 2),  	-- club aceptada
 	(2, 'club', 'accepted', 'Club BB', 'Club de baloncesto', 'basket', 'info@clubbb.com', '35000', 'Las Palmas', 'basket.jpg', '22222222B',
-					'Gestor', 'BB', 'gestorbb@gmail.com', '1234', '35000', 'Las Palmas', '1980-06-17', '689-353535', 'gestorbb.jpg', 2), 	 -- club aceptada
+					'Gestor', 'BB', 'gestorbb@gmail.com', '{noop}1234', '35000', 'Las Palmas', '1980-06-17', '689-353535', 'gestorbb.jpg', 2), 	 -- club aceptada
 	(3, 'club', 'accepted', 'Club CC', 'Club de natación', 'swim', 'info@clubcc.com', '38000', 'Tenerife', 'swim.jpg', '33333333C',
-					'Gestor', 'CC', 'gestorcc@gmail.com', '1234', '38000', 'Tenerife', '1985-03-01', '922-236598', 'gestrocc.jpg', 2),    	-- club aceptada
+					'Gestor', 'CC', 'gestorcc@gmail.com', '{noop}1234', '38000', 'Tenerife', '1985-03-01', '922-236598', 'gestrocc.jpg', 2),    	-- club aceptada
 	(4, 'club', 'accepted', 'Club DD', 'Club de senderismo', 'hike', 'info@clubdd.com', '35000', 'Las Palmas', 'hike.jpg', '44444444D',
-					'Gestor', 'DD', 'gestordd@gmail.com', '1234', '35000', 'Las Palmas', '1975-11-13', '928-656565', 'gestordd.jpg', 2),   	-- club aceptada
+					'Gestor', 'DD', 'gestordd@gmail.com', '{noop}1234', '35000', 'Las Palmas', '1975-11-13', '928-656565', 'gestordd.jpg', 2),   	-- club aceptada
 	(5, 'club', 'accepted', 'Club EE', 'Club de trail', 'trail', 'info@clubee.com', '38350', 'Tacoronte', 'trail.jpg', '55555555E',
-					'Gestor', 'EE', 'gestoree@gmail.com', '1234', '38350', 'Tacoronte', '1990-03-07', '699-333222', 'gestoree.jpg', 2),   	-- club aceptada
+					'Gestor', 'EE', 'gestoree@gmail.com', '{noop}1234', '38350', 'Tacoronte', '1990-03-07', '699-333222', 'gestoree.jpg', 2),   	-- club aceptada
 	(6, 'club', 'accepted', 'Club FF', 'Club de balonmano', 'handball', 'info@clubff.com', '38003', 'Ifara', 'handball.jpg', '66666666F',
-					'Gestor', 'FF', 'gestorff@gmail.com', '1234', '38003', 'Ifara', '1999-12-12', '677-377677', 'gestorff.jpg', 2),   		-- club aceptada (pero ya de baja)
+					'Gestor', 'FF', 'gestorff@gmail.com', '{noop}1234', '38003', 'Ifara', '1999-12-12', '677-377677', 'gestorff.jpg', 2),   		-- club aceptada (pero ya de baja)
 	(7, 'club', 'pending', 'Club YY', 'Club de petanca', 'petanca', 'info@clubyy.com', '35400', 'Arucas', 'petanca.jpg', '88888888Y',
 					'Gestor', 'YY', 'gestoryy@gmail.com', '{noop}1234', '35400', 'Arucas', '1995-10-10', '677-878787', 'gestoryy.jpg', 1),  		-- club pendiente
 	(8, 'club', 'rejected', 'Club ZZ', 'Club de tennis', 'tennis', 'info@clubzz.com', '38000', 'Sta Cruz', 'tennis.jpg', '99999999Z',
-					'Gestor', 'ZZ', 'gestorzz@gmail.com', '1234', '38000', 'Santa Cruz', '1987-07-23', '633-125998', 'gestorzz.jpg', 2),  	-- club rechazada
+					'Gestor', 'ZZ', 'gestorzz@gmail.com', '{noop}1234', '38000', 'Santa Cruz', '1987-07-23', '633-125998', 'gestorzz.jpg', 2),  	-- club rechazada
 	(9, 'partner', 'accepted', 'Club AA', 'Club de running', 'run', 'info@clubaa.com', '35000', 'Las Palmas', '100-run.jpg', '44323322E',
-					'Roberto', 'MS', 'robertoms@gmail.com', 'rhms', '35000', 'Las Palmas', '1978-04-21', '679-581971', 'roberto.jpg', 2), 	-- socio aceptada
+					'Roberto', 'MS', 'robertoms@gmail.com', '{noop}rhms', '35000', 'Las Palmas', '1978-04-21', '679-581971', 'roberto.jpg', 2), 	-- socio aceptada
 	(10, 'partner', 'accepted', 'Club AA', 'Club de running', 'run', 'info@clubaa.com', '35000', 'Las Palmas', '100-run.jpg', '42722886H',
-					'Donato', 'MR', 'donatomr@gmail.com', 'rdmr', '35414', 'Arucas', '1952-01-17', '688-566566', 'donato.jpg', 2),     	-- socio aceptada
+					'Donato', 'MR', 'donatomr@gmail.com', '{noop}rdmr', '35414', 'Arucas', '1952-01-17', '688-566566', 'donato.jpg', 2),     	-- socio aceptada
 	(11, 'partner', 'accepted', 'Club BB', 'Club de baloncesto', 'basket', 'info@clubbb.com', '35000', 'Las Palmas', '101-basket.jpg', '42722886H',
-					'Donato', 'MR', 'donatomr@gmail.com', 'rdmr', '35414', 'Arucas', '1952-01-17', '688-566566', '17-donato.jpg', 2),     	-- socio aceptada (2nd club)
+					'Donato', 'MR', 'donatomr@gmail.com', '{noop}rdmr', '35414', 'Arucas', '1952-01-17', '688-566566', '17-donato.jpg', 2),     	-- socio aceptada (2nd club)
 	(12, 'partner', 'accepted', 'Club FF', 'Club de balonmano', 'handball', 'info@clubff.com', '38003', 'Ifara', '105-handball.jpg', '42722886H',
-					'Donato', 'MR', 'donatomr@gmail.com', 'rdmr', '35414', 'Arucas', '1952-01-17', '688-566566', '17-donato.jpg', 2),     	-- socio aceptada (3rd club, pero de baja))
+					'Donato', 'MR', 'donatomr@gmail.com', '{noop}rdmr', '35414', 'Arucas', '1952-01-17', '688-566566', '17-donato.jpg', 2),     	-- socio aceptada (3rd club, pero de baja))
 	(13, 'partner', 'pending', 'Club AA', 'Club de running', 'run', 'info@clubaa.com', '35000', 'Las Palmas', '100-run.jpg', '42769320S',
 					'Nieves', 'SM', 'nievessm@gmail.com', '{noop}mnsm', '35414', 'Arucas', '1954-08-31', '675-753753', 'nieves.jpg', 1);     	-- socio pendiente (sin foto en almacenamiento temporal /var/tracksyours/uploads)
 
