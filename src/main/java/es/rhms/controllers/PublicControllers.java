@@ -92,4 +92,22 @@ public class PublicControllers {
 		return ResponseEntity.ok(response);
 	}
 
+	/**
+	 * Páginas legales públicas
+	 */
+	@GetMapping("/avisosyusos")
+	public String avisoLegal() {
+		return "avisosyusos";
+	}
+
+	@GetMapping("/privacidad")
+	public String privacidad() {
+		return "privacidad";
+	}
+
+	@GetMapping("/cookies")
+	public String cookies() {
+		return "cookies";
+	}
+
 }

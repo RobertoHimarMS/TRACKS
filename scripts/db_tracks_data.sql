@@ -42,7 +42,7 @@ VALUES
 	(6, 'club', 'accepted', 'Club FF', 'Club de balonmano', 'handball', 'info@clubff.com', '38003', 'Ifara', 'handball.jpg', '66666666F',
 					'Gestor', 'FF', 'gestorff@gmail.com', '1234', '38003', 'Ifara', '1999-12-12', '677-377677', 'gestorff.jpg', 2),   		-- club aceptada (pero ya de baja)
 	(7, 'club', 'pending', 'Club YY', 'Club de petanca', 'petanca', 'info@clubyy.com', '35400', 'Arucas', 'petanca.jpg', '88888888Y',
-					'Gestor', 'YY', 'gestoryy@gmail.com', '1234', '35400', 'Arucas', '1995-10-10', '677-878787', 'gestoryy.jpg', 1),  		-- club pendiente
+					'Gestor', 'YY', 'gestoryy@gmail.com', '{noop}1234', '35400', 'Arucas', '1995-10-10', '677-878787', 'gestoryy.jpg', 1),  		-- club pendiente
 	(8, 'club', 'rejected', 'Club ZZ', 'Club de tennis', 'tennis', 'info@clubzz.com', '38000', 'Sta Cruz', 'tennis.jpg', '99999999Z',
 					'Gestor', 'ZZ', 'gestorzz@gmail.com', '1234', '38000', 'Santa Cruz', '1987-07-23', '633-125998', 'gestorzz.jpg', 2),  	-- club rechazada
 	(9, 'partner', 'accepted', 'Club AA', 'Club de running', 'run', 'info@clubaa.com', '35000', 'Las Palmas', '100-run.jpg', '44323322E',
@@ -54,7 +54,7 @@ VALUES
 	(12, 'partner', 'accepted', 'Club FF', 'Club de balonmano', 'handball', 'info@clubff.com', '38003', 'Ifara', '105-handball.jpg', '42722886H',
 					'Donato', 'MR', 'donatomr@gmail.com', 'rdmr', '35414', 'Arucas', '1952-01-17', '688-566566', '17-donato.jpg', 2),     	-- socio aceptada (3rd club, pero de baja))
 	(13, 'partner', 'pending', 'Club AA', 'Club de running', 'run', 'info@clubaa.com', '35000', 'Las Palmas', '100-run.jpg', '42769320S',
-					'Nieves', 'SM', 'nievessm@gmail.com', 'mnsm', '35414', 'Arucas', '1954-08-31', '675-753753', NULL, 1);     	-- socio pendiente (sin foto en almacenamiento temporal /var/tracksyours/uploads)
+					'Nieves', 'SM', 'nievessm@gmail.com', '{noop}mnsm', '35414', 'Arucas', '1954-08-31', '675-753753', 'nieves.jpg', 1);     	-- socio pendiente (sin foto en almacenamiento temporal /var/tracksyours/uploads)
 
 -- 7.2. Usuarios
 -- Derivados de las requests aceptadas anteriores (5 gestores + 2 socios del club AA)

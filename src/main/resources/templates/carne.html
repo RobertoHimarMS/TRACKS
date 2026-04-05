@@ -47,7 +47,7 @@
                     <li class="nav-item"><a class="nav-link" th:href="@{/}"><i class="fa-solid fa-house me-1"></i> Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" th:href="${session.userlogged == null} ? @{/} : (${session.rollogged == 'admin'} ? @{/admin} : @{/club/{id}(id=${session.clublogged.idclub})})"><i class="fa-solid fa-users me-1"></i> Mi Club</a></li>
                     <li class="nav-item"><a class="nav-link active" th:href="${session.userlogged == null} ? @{/} : @{/club/partner/{id}(id=${session.userlogged.iduser})}"><i class="fa-solid fa-id-card me-1"></i> Mi Carné</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/club#tienda}"><i class="fa-solid fa-store me-1"></i> Tienda</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="${session.userlogged == null or session.rollogged == 'admin'} ? @{/} : @{/club/{id}#tienda(id=${session.clublogged.idclub})}"><i class="fa-solid fa-store me-1"></i> Tienda</a></li>
                     <li class="nav-item"><a class="nav-link" th:href="@{/home#contacto}"><i class="fa-solid fa-envelope me-1"></i> Contacto</a></li>
                 </ul>
                 <!-- No logueado: mostrar botón Iniciar sesión -->
@@ -113,7 +113,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-auto">
+                    <div class="col-auto" th:if="${session.rollogged != 'admin'}">
                         <button class="btn btn-leave" title="Darse de baja" data-bs-toggle="modal" data-bs-target="#bajaModal"
                                 th:data-club-name="${club != null} ? ${club.name} : 'este club'">
                             <i class="fa-solid fa-user-minus me-1"></i> Darse de baja
@@ -257,9 +257,9 @@
                 </div>
                 <div class="col-md-6 d-flex flex-column align-items-center mb-4 mb-lg-0">
                     <div class="mb-2 d-flex flex-md-row flex-column g-3">
-                        <a class="link-secondary text-decoration-none small px-2 rounded" href="#">Aviso Legal y Condiciones de uso</a>
-                        <a class="link-secondary text-decoration-none small px-2 rounded" href="#">Política de Privacidad</a>
-                        <a class="link-secondary text-decoration-none small px-2 rounded" href="#">Política de cookies</a>
+                        <a class="link-secondary text-decoration-none small px-2 rounded" th:href="@{/avisosyusos}">Aviso Legal y Condiciones de uso</a>
+                        <a class="link-secondary text-decoration-none small px-2 rounded" th:href="@{/privacidad}">Política de Privacidad</a>
+                        <a class="link-secondary text-decoration-none small px-2 rounded" th:href="@{/cookies}">Política de cookies</a>
                     </div>
                     <div class="small text-body-secondary">© <span id="year"></span> TrackYours</div>
                 </div>
@@ -373,7 +373,7 @@
     </div>
 
     <!-- MODAL DARSE DE BAJA -->
-    <div class="modal fade" id="bajaModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="bajaModal" tabindex="-1" aria-hidden="true" th:if="${session.rollogged != 'admin'}">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -388,7 +388,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <a class="btn btn-danger" id="bajaConfirmarBtn" href="/club/unsuscribe">
+                    <a class="btn btn-danger" id="bajaConfirmarBtn" th:href="@{/club/unsuscribe}">
                         <i class="fa-solid fa-check me-1"></i> Aceptar
                     </a>
                 </div>

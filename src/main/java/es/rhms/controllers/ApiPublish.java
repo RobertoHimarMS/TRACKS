@@ -189,9 +189,15 @@ public class ApiPublish {
 			}
 
 			int idclub = publicacion.getClub().getIdclub();
+			String photoFilename = publicacion.getPhoto(); // Guardar referencia antes de eliminar
 
-			// Eliminar la publicación (no hay tablas relacionadas)
+			// Eliminar la publicación de BD
 			publicacionService.deleteById(idpublicacion);
+
+			// Eliminar imagen física (después de BD, si falla queda huérfano pero no rompe la app)
+			if (photoFilename != null && !photoFilename.isEmpty()) {
+				fileUploadUtility.deleteImage(photoFilename, "publishs");
+			}
 
 			redirectAttributes.addFlashAttribute("mensajePublish", "La publicación ha sido eliminada");
 			return "redirect:/club/" + idclub + "#publicaciones";

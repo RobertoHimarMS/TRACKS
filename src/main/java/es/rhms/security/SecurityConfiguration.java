@@ -40,6 +40,7 @@ public class SecurityConfiguration {
 				.requestMatchers("/newclub").permitAll()
 				.requestMatchers("/newpartner/**").permitAll()
 				.requestMatchers("/club/{id}").permitAll()
+				.requestMatchers("/avisosyusos", "/privacidad", "/cookies").permitAll()
 
 				// === API PÚBLICA (sin autenticación) ===
 				.requestMatchers("/api/misclubes").permitAll()

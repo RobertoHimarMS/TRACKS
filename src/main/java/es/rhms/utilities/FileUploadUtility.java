@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 public class FileUploadUtility {
 
-	@Value("${upload.path:src/main/resources/static/imgs}")
+	@Value("${upload.path:C:/TrackYours/uploads}")
 	private String uploadPath;
 
 	private static final long MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
@@ -53,5 +53,19 @@ public class FileUploadUtility {
 		Files.copy(file.getInputStream(), filePath);
 
 		return newFilename;
+	}
+
+	public void deleteImage(String filename, String folder) {
+		if (filename == null || filename.isEmpty()) {
+			return; // No hay imagen que borrar
+		}
+		try {
+			Path filePath = Paths.get(uploadPath, folder, filename);
+			Files.deleteIfExists(filePath);
+		} catch (IOException e) {
+			// Error al eliminar archivo - se queda huérfano, pero no rompe la app
+			// Se puede limpiar manualmente o con un job programado
+			System.err.println("No se pudo eliminar el archivo: " + filename + " en " + folder);
+		}
 	}
 }

@@ -391,10 +391,10 @@ DELIMITER ;
 -- Request_idrequest es NULL porque son usuarios internos, no registros web públicos.
 -- aud_updated_by será 1 (el admin) o 0 (el propio sistema)
 -- por ahora contraseñas de entorno pre-explotación y didáctico
-INSERT INTO Users (iduser, dni, name, surname, email, passwd, active, Request_idrequest) 
+INSERT INTO Users (iduser, dni, name, surname, email, passwd, photo, active, Request_idrequest) 
 VALUES 
-	(1, '00000000A', 'System', 'system', 'system@trackyours.com', '{noop}1234', TRUE, NULL), 	-- Usuario "System" para operaciones sin loguear
-	(2, '99999999B', 'Admin', 'system', 'admin@trackyours.com', '{noop}1234', TRUE, NULL);   	-- Usuario Administrador del sistema
+	(1, '00000000A', 'System', 'system', 'system@trackyours.com', '{noop}1234', NULL, TRUE, NULL), 	-- Usuario "System" para operaciones sin loguear
+	(2, '99999999B', 'Admin', 'system', 'admin@trackyours.com', '{noop}1234', 'admin.jpg', TRUE, NULL);   	-- Usuario Administrador del sistema
 
 -- Insertar Club ficticio "System" (ID 1) para dar cobijo a los usuarios del sistema
 -- Request_idrequest es NULL porque no proviene de una solicitud pública.

@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context>
-
-    <!-- Configuración de multipart para Tomcat 11+ (despliegue externo) -->
-    <!-- El límite de partes se configura mediante System.setProperty en TomcatConfiguration.java -->
-
-    <!-- Permitir parsing multipart casual (necesario para algunos filtros) -->
-    <JarScanner scanClassPath="true"/>
-
+<Context maxFileCount="100">
+    <!-- 
+      Aquí puedes poner otras configuraciones específicas de Tomcat.
+      maxFileCount="100" soluciona el error FileCountLimitExceededException 
+      para este WAR en concreto.
+    -->
 </Context>

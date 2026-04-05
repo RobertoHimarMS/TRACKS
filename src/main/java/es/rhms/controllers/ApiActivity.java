@@ -222,12 +222,18 @@ public class ApiActivity {
 			}
 
 			int idclub = actividad.getClub().getIdclub();
+			String photoFilename = actividad.getPhoto(); // Guardar referencia antes de eliminar
 
 			// Eliminar inscripciones primero (por la foreign key)
 			actividadService.deleteInscripcionesByActividadId(idactividad);
 
-			// Eliminar la actividad
+			// Eliminar la actividad de BD
 			actividadService.deleteById(idactividad);
+
+			// Eliminar imagen física (después de BD, si falla queda huérfano pero no rompe la app)
+			if (photoFilename != null && !photoFilename.isEmpty()) {
+				fileUploadUtility.deleteImage(photoFilename, "activities");
+			}
 
 			redirectAttributes.addFlashAttribute("mensajeActivity", "La actividad ha sido eliminada");
 			return "redirect:/club/" + idclub;

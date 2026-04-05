@@ -307,7 +307,7 @@
             // --- Mostrar imagen si existe ---
             if (imgContainer && imgEl) {
                 if (photo && photo !== 'null' && photo.trim() !== '') {
-                    imgEl.src = '/imgs/products/' + photo;
+                    imgEl.src = CONTEXT_PATH + 'imgs/products/' + photo;
                     imgEl.alt = name;
                     imgContainer.style.display = 'block';
                 } else {
@@ -880,7 +880,7 @@
             // URL sin parámetros - usa datos de sesión del servidor
             const confirmarBtn = bajaModalEl.querySelector('#bajaConfirmarBtn');
             if (confirmarBtn) {
-                confirmarBtn.href = '/club/unsuscribe';
+                confirmarBtn.href = CONTEXT_PATH + 'club/unsuscribe';
             }
         });
     }
@@ -955,7 +955,7 @@
 
                 // Determinar acción y URL
                 const action = isChecked ? 'suscribe' : 'unsuscribe';
-                const url = `/user/activity/${action}/${actividadId}`;
+                const url = CONTEXT_PATH + `user/activity/${action}/${actividadId}`;
 
                 // Referencia al checkbox
                 const toggleInput = this;
@@ -1009,7 +1009,7 @@
         deleteInscripcionBtns.forEach(btn => {
             btn.addEventListener('click', function() {
                 const actividadId = this.getAttribute('data-actividad-id');
-                const url = `/user/activity/unsuscribe/${actividadId}`;
+                const url = CONTEXT_PATH + `user/activity/unsuscribe/${actividadId}`;
                 const row = this.closest('tr');
 
                 // Preparar headers
@@ -1111,7 +1111,7 @@
                 }
 
                 // Llamada AJAX
-                fetch(`/user/product/reserve/${productoId}?cantidad=${cantidad}`, {
+                fetch(CONTEXT_PATH + `user/product/reserve/${productoId}?cantidad=${cantidad}`, {
                     method: 'POST',
                     headers: headers
                 })
@@ -1188,7 +1188,7 @@
                 }
 
                 // Llamada AJAX
-                fetch(`/user/product/cancel/${compraId}`, {
+                fetch(CONTEXT_PATH + `user/product/cancel/${compraId}`, {
                     method: 'POST',
                     headers: headers
                 })
@@ -1229,7 +1229,7 @@
         deleteActividadBtns.forEach(btn => {
             btn.addEventListener('click', function() {
                 const actividadId = this.getAttribute('data-delete-actividad');
-                const url = `/api/activity/delete/${actividadId}`;
+                const url = CONTEXT_PATH + `api/activity/delete/${actividadId}`;
 
                 // Confirmar antes de eliminar
                 if (!confirm('¿Estás seguro de que quieres eliminar esta actividad?')) {
@@ -1276,7 +1276,7 @@
         deletePublicacionBtns.forEach(btn => {
             btn.addEventListener('click', function() {
                 const publicacionId = this.getAttribute('data-delete-publicacion');
-                const url = `/api/publish/delete/${publicacionId}`;
+                const url = CONTEXT_PATH + `api/publish/delete/${publicacionId}`;
 
                 // Confirmar antes de eliminar
                 if (!confirm('¿Estás seguro de que quieres eliminar esta publicación?')) {
@@ -1323,7 +1323,7 @@
         deleteProductoBtns.forEach(btn => {
             btn.addEventListener('click', function() {
                 const productoId = this.getAttribute('data-delete-producto');
-                const url = `/api/product/delete/${productoId}`;
+                const url = CONTEXT_PATH + `api/product/delete/${productoId}`;
 
                 // Confirmar antes de eliminar
                 if (!confirm('¿Estás seguro de que quieres eliminar este producto?')) {

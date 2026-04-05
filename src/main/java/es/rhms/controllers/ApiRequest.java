@@ -5,12 +5,13 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -29,7 +30,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 
-@RestController
+@Controller
 @RequestMapping("/api/request")
 public class ApiRequest {
 
@@ -47,6 +48,9 @@ public class ApiRequest {
 
 	@Autowired
 	private FileUploadUtility fileUploadUtility;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	/**
 	 * Procesa solicitudes de alta (club o socio) desde el formulario unificado
@@ -125,7 +129,7 @@ public class ApiRequest {
 			// Procesar foto de usuario si se ha subido y usuario no está logueado
 			if (usr_photo != null && !usr_photo.isEmpty() && usuarioLogueado == null) {
 				try {
-					usrPhotoName = fileUploadUtility.saveImage(usr_photo, "users");
+					usrPhotoName = fileUploadUtility.saveImage(usr_photo, "persons");
 				} catch (IllegalArgumentException e) {
 					redirectAttributes.addAttribute("mensaje", "ko");
 					if (tipoSolicitud == TipoRequest.club) {
@@ -133,6 +137,8 @@ public class ApiRequest {
 					} else {
 						return "redirect:/club/" + clubId;
 					}
+				} catch (IOException e) {
+					throw e;
 				}
 			}
 
@@ -169,8 +175,7 @@ public class ApiRequest {
 				request.setUsrName(usr_name);
 				request.setUsrSurname(usr_surname);
 				request.setUsrEmail(usr_email);
-				// Para tipo club, añadir prefijo {noop} a la contraseña
-				request.setUsrPasswd(tipoSolicitud == TipoRequest.club ? "{noop}" + usr_passwd : usr_passwd);
+				request.setUsrPasswd(passwordEncoder.encode(usr_passwd));
 				request.setUsrCp(usr_cp);
 				request.setUsrCity(usr_city);
 				request.setUsrPhone(usr_phone);
@@ -268,7 +273,7 @@ public class ApiRequest {
 			}
 			return procesarPeticionPartner(req, accept, actualUserId);
 		} else {
-			return ResponseEntity.badRequest().body(Map.of("error", "Tipo de petición desconocida"));
+			return ResponseEntity.badRequest().body(Map.of("error", "Tipo de petición desconocido"));
 		}
 	}
 
@@ -287,7 +292,7 @@ public class ApiRequest {
 				usuario.setName(req.getUsrName());
 				usuario.setSurname(req.getUsrSurname());
 				usuario.setEmail(req.getUsrEmail());
-				usuario.setPasswd("{noop}" + req.getUsrPasswd());
+				usuario.setPasswd(req.getUsrPasswd());
 				usuario.setCp(req.getUsrCp());
 				usuario.setCity(req.getUsrCity());
 				usuario.setBorned(req.getUsrBorned());
@@ -354,7 +359,7 @@ public class ApiRequest {
 				usuario.setName(req.getUsrName());
 				usuario.setSurname(req.getUsrSurname());
 				usuario.setEmail(req.getUsrEmail());
-				usuario.setPasswd("{noop}" + req.getUsrPasswd());
+				usuario.setPasswd(req.getUsrPasswd());
 				usuario.setCp(req.getUsrCp());
 				usuario.setCity(req.getUsrCity());
 				usuario.setBorned(req.getUsrBorned());
