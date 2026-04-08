@@ -5,7 +5,6 @@
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.x-brightgreen)
 ![BootStrap](https://img.shields.io/badge/BootStrap-5.x-purple)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-blue)
-![Docker](https://img.shields.io/badge/Docker-ready-blue)
 ![Status](https://img.shields.io/badge/status-MVP_in_progress-danger)
 
 Plataforma web para la gestión de clubes deportivos no profesionales.  
@@ -105,16 +104,16 @@ cd trackyours
 mvn spring-boot:run
 ```
 
-O con Docker:
+O instrucciones detalladas de despliegue en:
 
 ```bash
-docker-compose up --build
+TrackYours/docs/deliverables/Documento de despliegue
 ```
 
 Accede en:
 
 ```
-http://localhost:8080
+http://localhost:8080/tracks
 ```
 
 ---
